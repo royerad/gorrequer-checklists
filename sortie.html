@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Check-list sortie</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 420px; margin: 1rem auto; padding: 0 1rem; }
+    label { display: block; margin: 0.6rem 0; }
+  </style>
+</head>
+<body>
+  <h1>Sortie</h1>
+  <form id="liste">
+    <label><input type="checkbox" data-key="frigo"> Vider / fermer le frigo</label>
+    <label><input type="checkbox" data-key="poubelles"> Sortir les poubelles</label>
+    <label><input type="checkbox" data-key="chauffage"> Couper le chauffage</label>
+    <label><input type="checkbox" data-key="volets"> Fermer les volets</label>
+    <label><input type="checkbox" data-key="eau"> Fermer l'eau si besoin</label>
+    <label><input type="checkbox" data-key="cles"> Vérifier clés / alarme</label>
+  </form>
+  <button type="button" id="reset">Réinitialiser</button>
+
+  <script>
+    const form = document.getElementById("liste");
+    form.querySelectorAll("input[type=checkbox]").forEach((box) => {
+      const key = "sortie-" + box.dataset.key;
+      box.checked = localStorage.getItem(key) === "1";
+      box.addEventListener("change", () => {
+        localStorage.setItem(key, box.checked ? "1" : "0");
+      });
+    });
+    document.getElementById("reset").onclick = () => {
+      form.querySelectorAll("input").forEach((box) => {
+        box.checked = false;
+        localStorage.setItem("sortie-" + box.dataset.key, "0");
+      });
+    };
+  </script>
+</body>
+</html>
