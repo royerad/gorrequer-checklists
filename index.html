@@ -5,41 +5,336 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Check-list entrée</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 420px; margin: 1rem auto; padding: 0 1rem; }
-    label { display: block; margin: 0.6rem 0; }
+    :root {
+      --bg: #f6f4f1;
+      --card: #fff;
+      --text: #1c1c1c;
+      --muted: #666;
+      --line: #e4e0da;
+      --accent: #2f5d50;
+      --priority: #8a3b2c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 1rem;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.5rem;
+    }
+
+    .plan {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .plan img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .plan figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .section-title {
+      margin: 1.25rem 0 0.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-title.priority {
+      color: var(--priority);
+    }
+
+    details.item {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 0.5rem 0;
+      overflow: hidden;
+    }
+
+    details.item[open] {
+      border-color: #cfc8be;
+    }
+
+    details.item.priority {
+      border-left: 4px solid var(--priority);
+    }
+
+    summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.85rem 0.9rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary .check {
+      flex: 0 0 auto;
+    }
+
+    summary .title {
+      flex: 1;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    summary .chevron {
+      color: var(--muted);
+      transition: transform 0.15s ease;
+    }
+
+    details[open] summary .chevron {
+      transform: rotate(90deg);
+    }
+
+    .content {
+      padding: 0 0.9rem 0.9rem 2.6rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .content p {
+      margin: 0.75rem 0 0.5rem;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .content img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--priority);
+      background: #f3e4e0;
+      padding: 0.15rem 0.4rem;
+      border-radius: 999px;
+      margin-left: 0.35rem;
+      vertical-align: middle;
+    }
+
+    #reset {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #reset:hover {
+      border-color: #bbb;
+    }
+
+    .progress {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
   </style>
 </head>
 <body>
   <h1>Entrée</h1>
-  <form id="liste">
-    <label>
-  <input type="checkbox" data-key="volets"> Ouvrir les volets
-</label>
-<img
-  src="images/code.png"
-  alt="Aide étape 1"
-  style="max-width:100%; height:auto; margin:0.25rem 0 0.75rem;"
->
-    <label><input type="checkbox" data-key="chauffage"> Allumer le chauffage</label>
-    <label><input type="checkbox" data-key="frigo"> Vérifier le frigo</label>
-  </form>
+  <p class="progress" id="progress">0 / 0 terminé</p>
+
+  <!-- Remplacez images/plan.png par votre vrai plan de la maison -->
+  <figure class="plan">
+    <img src="images/plan.png" alt="Plan de la maison" />
+    <figcaption>Plan de la maison — repères à l’arrivée</figcaption>
+  </figure>
+
+  <div class="section-title priority">Obligatoire au départ</div>
+
+  <details class="item priority">
+    <summary>
+      <input class="check" type="checkbox" data-key="clefs" />
+      <span class="title">Clefs : boîte à code <span class="badge">Prioritaire</span></span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Récupérer les clefs dans la boîte à code.</p>
+      <img src="images/code.png" alt="Boîte à code" />
+    </div>
+  </details>
+
+  <details class="item priority">
+    <summary>
+      <input class="check" type="checkbox" data-key="electricite" />
+      <span class="title">Électricité : compteur <span class="badge">Prioritaire</span></span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Remettre le courant au compteur.</p>
+      <img src="images/code.png" alt="Compteur électrique" />
+    </div>
+  </details>
+
+  <details class="item priority">
+    <summary>
+      <input class="check" type="checkbox" data-key="alarme" />
+      <span class="title">Alarme : code <span class="badge">Prioritaire</span></span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Désactiver l’alarme avec le code.</p>
+      <img src="images/code.png" alt="Alarme" />
+    </div>
+  </details>
+
+  <div class="section-title">Ensuite, dans l’ordre qui vous arrange</div>
+
+  <details class="item">
+    <summary>
+      <input class="check" type="checkbox" data-key="mort-aux-rats" />
+      <span class="title">Faire attention à la mort aux rats</span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Vérifier les zones concernées avant de circuler / ranger.</p>
+      <img src="images/code.png" alt="Mort aux rats" />
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>
+      <input class="check" type="checkbox" data-key="eau-froide" />
+      <span class="title">Ouvrir l’eau froide</span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Ouvrir l’arrivée d’eau froide.</p>
+      <img src="images/code.png" alt="Eau froide" />
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>
+      <input class="check" type="checkbox" data-key="eau-chaude" />
+      <span class="title">Ouvrir l’eau chaude</span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Ouvrir l’arrivée d’eau chaude.</p>
+      <img src="images/code.png" alt="Eau chaude" />
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>
+      <input class="check" type="checkbox" data-key="volets" />
+      <span class="title">Volets : accrocher / ouvrir</span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Ouvrir et accrocher les volets.</p>
+      <img src="images/code.png" alt="Volets" />
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>
+      <input class="check" type="checkbox" data-key="wc" />
+      <span class="title">WC à alimenter ×2</span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Réalimenter les 2 WC.</p>
+      <img src="images/code.png" alt="WC" />
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>
+      <input class="check" type="checkbox" data-key="gaz" />
+      <span class="title">Cuisine : ouvrir le gaz</span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Ouvrir le gaz cuisine.</p>
+      <img src="images/code.png" alt="Gaz cuisine" />
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>
+      <input class="check" type="checkbox" data-key="installation" />
+      <span class="title">Installation : salle à manger / cuisine / salon</span>
+      <span class="chevron">›</span>
+    </summary>
+    <div class="content">
+      <p>Installer / remettre en place ces pièces.</p>
+      <img src="images/code.png" alt="Installation" />
+    </div>
+  </details>
+
   <button type="button" id="reset">Réinitialiser</button>
 
   <script>
-    const form = document.getElementById("liste");
-    form.querySelectorAll("input[type=checkbox]").forEach((box) => {
+    const boxes = document.querySelectorAll('input[type="checkbox"][data-key]');
+    const progress = document.getElementById("progress");
+
+    function updateProgress() {
+      const total = boxes.length;
+      const done = [...boxes].filter((b) => b.checked).length;
+      progress.textContent = done + " / " + total + " terminé";
+    }
+
+    boxes.forEach((box) => {
       const key = "entree-" + box.dataset.key;
       box.checked = localStorage.getItem(key) === "1";
+
+      // Empêche l'ouverture/fermeture de l'accordéon quand on coche
+      box.addEventListener("click", (e) => e.stopPropagation());
+
       box.addEventListener("change", () => {
         localStorage.setItem(key, box.checked ? "1" : "0");
+        updateProgress();
       });
     });
+
     document.getElementById("reset").onclick = () => {
-      form.querySelectorAll("input").forEach((box) => {
+      boxes.forEach((box) => {
         box.checked = false;
         localStorage.setItem("entree-" + box.dataset.key, "0");
       });
+      updateProgress();
     };
+
+    updateProgress();
   </script>
 </body>
 </html>
