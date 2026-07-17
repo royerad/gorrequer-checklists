@@ -84,8 +84,67 @@
       color: #3a221c;
     }
 
+    /* Gros accordéons parents */
+    details.mode {
+      background: var(--card);
+      border: 2px solid #cfc8be;
+      border-radius: 14px;
+      margin: 0.85rem 0;
+      overflow: hidden;
+    }
+
+    details.mode > summary {
+      list-style: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1rem;
+      cursor: pointer;
+      user-select: none;
+      background: #efeae3;
+    }
+
+    details.mode > summary::-webkit-details-marker { display: none; }
+
+    details.mode[open] > summary {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mode-title {
+      flex: 1;
+    }
+
+    .mode-title strong {
+      display: block;
+      font-size: 1.15rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .mode-title span {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .mode-body {
+      padding: 0.75rem 0.75rem 1rem;
+    }
+
+    .mode .chevron-lg {
+      font-size: 1.4rem;
+      color: var(--muted);
+      transition: transform 0.15s ease;
+      line-height: 1;
+    }
+
+    details.mode[open] > summary .chevron-lg {
+      transform: rotate(90deg);
+    }
+
     .section-title {
-      margin: 1.25rem 0 0.5rem;
+      margin: 1rem 0 0.5rem;
       font-size: 0.8rem;
       letter-spacing: 0.04em;
       text-transform: uppercase;
@@ -112,7 +171,7 @@
       border-left: 4px solid var(--priority);
     }
 
-    summary {
+    details.item > summary {
       list-style: none;
       display: flex;
       align-items: center;
@@ -122,7 +181,7 @@
       user-select: none;
     }
 
-    summary::-webkit-details-marker { display: none; }
+    details.item > summary::-webkit-details-marker { display: none; }
 
     summary .check { flex: 0 0 auto; }
 
@@ -137,7 +196,7 @@
       transition: transform 0.15s ease;
     }
 
-    details[open] summary .chevron {
+    details.item[open] > summary .chevron {
       transform: rotate(90deg);
     }
 
@@ -174,6 +233,17 @@
       vertical-align: middle;
     }
 
+    .note {
+      background: #f3f7f5;
+      border: 1px solid #d5e3dc;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin: 0.5rem 0 0.75rem;
+      font-size: 1rem;
+      line-height: 1.4;
+      color: #243832;
+    }
+
     #reset {
       width: 100%;
       margin-top: 1rem;
@@ -205,7 +275,7 @@
 </head>
 <body>
   <h1>Sortie</h1>
-  <p class="progress" id="progress">0 / 0 terminé</p>
+  <p class="progress" id="progress">Choisissez un type de sortie</p>
 
   <figure class="plan">
     <img src="images/plan.png" alt="Plan de la maison" />
@@ -215,168 +285,299 @@
   <div class="alerts">
     <div class="alert">
       <strong>Poubelles</strong>
-      <p>Pensez à vider et à emmener toutes les poubelles ! (Souries....)</p>
+      <p>Pensez à vider et à emmener toutes les poubelles ! (Souris…)</p>
     </div>
   </div>
 
-  <div class="section-title">Avant de partir, dans l’ordre qui vous arrange</div>
-
-  <details class="item">
+  <!-- ========== PETITE SORTIE ========== -->
+  <details class="mode">
     <summary>
-      <input class="check" type="checkbox" data-key="volets" />
-      <span class="title">Fermeture des volets</span>
-      <span class="chevron">›</span>
+      <div class="mode-title">
+        <strong>Petite sortie</strong>
+        <span>Une personne vous suit dans les 10 jours</span>
+      </div>
+      <span class="chevron-lg">›</span>
     </summary>
-    <div class="content">
-      <p>Fermer tous les volets de la maison, y compris dans l’escalier et dans les chambres.</p>
-      <img src="images/volets.jpg" alt="Volets" />
+    <div class="mode-body">
+      <div class="note">
+        Emmenez les denrées périssables (ou prévenez la personne qui arrive). Sinon les souris seront là.
+      </div>
+
+      <div class="section-title">À faire</div>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-volets" />
+          <span class="title">Fermer les volets du rez-de-chaussée</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Fermer les volets du rez-de-chaussée (pas besoin de toute la maison).</p>
+          <img src="images/volets.jpg" alt="Volets" />
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-eau" />
+          <span class="title">Couper l’eau</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Couper l’eau (arrivée d’eau froide).</p>
+          <img src="images/eau-froide.jpg" alt="Eau froide" />
+          <img src="images/eau-froide2.jpg" alt="Eau froide — vue 2" />
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-eau-chaude" />
+          <span class="title">Fermer l’eau chaude</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Descendre uniquement le plomb à gauche.</p>
+          <img src="images/eau-chaude.jpg" alt="Eau chaude" />
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-gaz" />
+          <span class="title">Couper le gaz</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Couper le gaz (bonbonne / bouchon noir).</p>
+          <img src="images/gaz.jpg" alt="Gaz" />
+        </div>
+      </details>
+
+      <div class="section-title priority">Prioritaire</div>
+
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-alarme" />
+          <span class="title">Activer l’alarme <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Activez l’alarme. Laisser la lumière allumée près de l’alarme, pour les suivants. Vous avez un temps limité pour sortir ensuite.</p>
+          <img src="images/alarme.jpg" alt="Alarme — vue 1" />
+          <img src="images/alarme2.jpg" alt="Alarme — vue 2" />
+        </div>
+      </details>
+
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-electricite" />
+          <span class="title">Couper l’électricité générale <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Dans le salon, coupez l’électricité générale (coupure générale).</p>
+          <img src="images/electricite.jpg" alt="Électricité" />
+        </div>
+      </details>
+
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-porte-cuisine" />
+          <span class="title">Sortie par la porte de la cuisine <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Sortez et fermez la porte et le volet de la cuisine, puis fermez à clef.</p>
+          <img src="images/porte-cuisine.jpg" alt="Porte et volet cuisine" />
+        </div>
+      </details>
+
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-clefs" />
+          <span class="title">Remettre les clefs <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Remettre les clefs dans la boîte à clefs et brouillez le code.</p>
+          <img src="images/clefs.jpg" alt="Boîte à clefs" />
+        </div>
+      </details>
     </div>
   </details>
 
-  <details class="item">
+  <!-- ========== GRANDE SORTIE ========== -->
+  <details class="mode">
     <summary>
-      <input class="check" type="checkbox" data-key="wc" />
-      <span class="title">Fermer les WC</span>
-      <span class="chevron">›</span>
+      <div class="mode-title">
+        <strong>Grande sortie</strong>
+        <span>Vous êtes le dernier / la dernière</span>
+      </div>
+      <span class="chevron-lg">›</span>
     </summary>
-    <div class="content">
-      <p>Fermer / couper l’alimentation des WC.</p>
-      <img src="images/wc.jpg" alt="WC" />
-    </div>
-  </details>
+    <div class="mode-body">
 
-  <details class="item">
-    <summary>
-      <input class="check" type="checkbox" data-key="frigo" />
-      <span class="title">Vider le frigo</span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Vider le frigo et le laisser ouvert.</p>
-      <img src="images/frigo.jpg" alt="Frigo" />
-    </div>
-  </details>
+      <div class="section-title">Avant de partir, dans l’ordre qui vous arrange</div>
 
-  <details class="item">
-    <summary>
-      <input class="check" type="checkbox" data-key="eau-chaude" />
-      <span class="title">Fermer l’eau chaude</span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Descendre uniquement le plomb à gauche.</p>
-      <img src="images/eau-chaude.jpg" alt="Eau chaude" />
-    </div>
-  </details>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-volets" />
+          <span class="title">Fermeture des volets</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Fermer tous les volets de la maison, y compris dans l’escalier et dans les chambres.</p>
+          <img src="images/volets.jpg" alt="Volets" />
+        </div>
+      </details>
 
-  <details class="item">
-    <summary>
-      <input class="check" type="checkbox" data-key="lave-vaisselle" />
-      <span class="title">Lave-vaisselle</span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Laisser le lave-vaisselle vide et ouvert.</p>
-      <img src="images/lave-vaisselle.jpg" alt="Lave-vaisselle" />
-    </div>
-  </details>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-wc" />
+          <span class="title">Fermer les WC</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Fermer / couper l’alimentation des WC.</p>
+          <img src="images/wc.jpg" alt="WC" />
+        </div>
+      </details>
 
-  <details class="item">
-    <summary>
-      <input class="check" type="checkbox" data-key="gaz" />
-      <span class="title">Couper le gaz</span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Couper le gaz (bonbonne / bouchon noir).</p>
-      <img src="images/gaz.jpg" alt="Gaz" />
-    </div>
-  </details>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-frigo" />
+          <span class="title">Vider le frigo</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Vider le frigo et le laisser ouvert.</p>
+          <img src="images/frigo.jpg" alt="Frigo" />
+        </div>
+      </details>
 
-  <details class="item">
-    <summary>
-      <input class="check" type="checkbox" data-key="nourriture" />
-      <span class="title">Emmener toute nourriture périssable! Ranger le reste dans les placards adéquats.</span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Emmener toute nourriture périssable, sinon les souris seront là.</p>
-      <img src="images/nourriture.jpg" alt="Nourriture périssable" />
-    </div>
-  </details>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-eau-chaude" />
+          <span class="title">Fermer l’eau chaude</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Descendre uniquement le plomb à gauche.</p>
+          <img src="images/eau-chaude.jpg" alt="Eau chaude" />
+        </div>
+      </details>
 
-  <details class="item">
-    <summary>
-      <input class="check" type="checkbox" data-key="rangement" />
-      <span class="title">Meubles & autresr</span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Ranger la cuisine, le salon et la salle à manger. Il faut monter au grenier les différents meubles, ou dans la bilbiothèque</p>
-      <img src="images/installation.jpg" alt="Rangement des pièces" />
-    </div>
-  </details>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-lave-vaisselle" />
+          <span class="title">Lave-vaisselle</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Laisser le lave-vaisselle vide et ouvert.</p>
+          <img src="images/lave-vaisselle.jpg" alt="Lave-vaisselle" />
+        </div>
+      </details>
 
-  <div class="section-title priority">Derniers éléments pour sortir</div>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-gaz" />
+          <span class="title">Couper le gaz</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Couper le gaz (bonbonne / bouchon noir).</p>
+          <img src="images/gaz.jpg" alt="Gaz" />
+        </div>
+      </details>
 
-  <details class="item priority">
-    <summary>
-      <input class="check" type="checkbox" data-key="porte-entree" />
-      <span class="title">Fermer la porte d’entrée <span class="badge">Prioritaire</span></span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Fermer la porte d’entrée principale à clef. </p>
-      <img src="images/porte-entree.jpg" alt="Porte d’entrée" />
-    </div>
-  </details>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-nourriture" />
+          <span class="title">Emmener toute nourriture périssable ! Ranger le reste dans les placards adéquats.</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Emmener toute nourriture périssable, sinon les souris seront là.</p>
+          <img src="images/nourriture.jpg" alt="Nourriture périssable" />
+        </div>
+      </details>
 
-  <details class="item priority">
-    <summary>
-      <input class="check" type="checkbox" data-key="alarme" />
-      <span class="title">Activer l’alarme <span class="badge">Prioritaire</span></span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Activez l’alarme. Laisser la lumière allumée près de l’alarme, pour les suivants. Vous avez un temps limité pour sortir ensuite.</p>
-      <img src="images/alarme.jpg" alt="Alarme — vue 1" />
-      <img src="images/alarme2.jpg" alt="Alarme — vue 2" />
-    </div>
-  </details>
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-rangement" />
+          <span class="title">Meubles &amp; autres</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Ranger la cuisine, le salon et la salle à manger. Il faut monter au grenier les différents meubles, ou dans la bibliothèque.</p>
+          <img src="images/installation.jpg" alt="Rangement des pièces" />
+        </div>
+      </details>
 
-  <details class="item priority">
-    <summary>
-      <input class="check" type="checkbox" data-key="electricite" />
-      <span class="title">Couper l’électricité générale <span class="badge">Prioritaire</span></span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Dans le salon, coupez l’électricité générale (coupure générale).</p>
-      <img src="images/electricite.jpg" alt="Électricité" />
-    </div>
-  </details>
+      <div class="section-title priority">Derniers éléments pour sortir</div>
 
-  <details class="item priority">
-    <summary>
-      <input class="check" type="checkbox" data-key="porte-cuisine" />
-      <span class="title">Sortie par la porte de la cuisine<span class="badge">Prioritaire</span></span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Sortez ez fermer la porte et le volet de la cuisine, puis fermer à clef.</p>
-      <img src="images/porte-cuisine.jpg" alt="Porte et volet cuisine" />
-    </div>
-  </details>
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-porte-entree" />
+          <span class="title">Fermer la porte d’entrée <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Fermer la porte d’entrée principale à clef.</p>
+          <img src="images/porte-entree.jpg" alt="Porte d’entrée" />
+        </div>
+      </details>
 
-  <details class="item priority">
-    <summary>
-      <input class="check" type="checkbox" data-key="clefs" />
-      <span class="title">Remettre les clefs<span class="badge">Prioritaire</span></span>
-      <span class="chevron">›</span>
-    </summary>
-    <div class="content">
-      <p>Remettre les clefs dans la boîte à clefs et brouillez le code.</p>
-      <img src="images/clefs.jpg" alt="Boîte à clefs" />
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-alarme" />
+          <span class="title">Activer l’alarme <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Activez l’alarme. Laisser la lumière allumée près de l’alarme, pour les suivants. Vous avez un temps limité pour sortir ensuite.</p>
+          <img src="images/alarme.jpg" alt="Alarme — vue 1" />
+          <img src="images/alarme2.jpg" alt="Alarme — vue 2" />
+        </div>
+      </details>
+
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-electricite" />
+          <span class="title">Couper l’électricité générale <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Dans le salon, coupez l’électricité générale (coupure générale).</p>
+          <img src="images/electricite.jpg" alt="Électricité" />
+        </div>
+      </details>
+
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-porte-cuisine" />
+          <span class="title">Sortie par la porte de la cuisine <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Sortez et fermez la porte et le volet de la cuisine, puis fermez à clef.</p>
+          <img src="images/porte-cuisine.jpg" alt="Porte et volet cuisine" />
+        </div>
+      </details>
+
+      <details class="item priority">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-clefs" />
+          <span class="title">Remettre les clefs <span class="badge">Prioritaire</span></span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Remettre les clefs dans la boîte à clefs et brouillez le code.</p>
+          <img src="images/clefs.jpg" alt="Boîte à clefs" />
+        </div>
+      </details>
     </div>
   </details>
 
@@ -387,9 +588,16 @@
     const progress = document.getElementById("progress");
 
     function updateProgress() {
-      const total = boxes.length;
-      const done = [...boxes].filter((b) => b.checked).length;
-      progress.textContent = done + " / " + total + " terminé";
+      const openMode = document.querySelector("details.mode[open]");
+      if (!openMode) {
+        progress.textContent = "Choisissez un type de sortie";
+        return;
+      }
+      const modeBoxes = openMode.querySelectorAll('input[type="checkbox"][data-key]');
+      const total = modeBoxes.length;
+      const done = [...modeBoxes].filter((b) => b.checked).length;
+      const label = openMode.querySelector(".mode-title strong")?.textContent || "Sortie";
+      progress.textContent = label + " — " + done + " / " + total + " terminé";
     }
 
     boxes.forEach((box) => {
@@ -402,8 +610,16 @@
       });
     });
 
+    document.querySelectorAll("details.mode").forEach((mode) => {
+      mode.addEventListener("toggle", updateProgress);
+    });
+
     document.getElementById("reset").onclick = () => {
-      boxes.forEach((box) => {
+      const openMode = document.querySelector("details.mode[open]");
+      const targets = openMode
+        ? openMode.querySelectorAll('input[type="checkbox"][data-key]')
+        : boxes;
+      targets.forEach((box) => {
         box.checked = false;
         localStorage.setItem("sortie-" + box.dataset.key, "0");
       });
