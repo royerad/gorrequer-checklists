@@ -135,14 +135,14 @@
       });
     }
 
-    async function apiPost(payload) {
-      // text/plain = évite beaucoup de blocages CORS
-      await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload),
-      });
-    }
+async function apiPost(payload) {
+  await fetch(API_URL, {
+    method: "POST",
+    mode: "no-cors", // important pour que l'envoi parte bien vers Apps Script
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+  });
+}
 
     function compressImage(file, maxW = 1200, quality = 0.7) {
       return new Promise((resolve, reject) => {
@@ -274,9 +274,9 @@
         return String(item.statut).toLowerCase() === currentFilter.toLowerCase();
       });
 
-      statusEl.textContent = items.length
-        ? items.length + " travail" + (items.length > 1 ? "x" : "")
-        : "Aucun travail";
+    statusEl.textContent = items.length
+  ? items.length + (items.length > 1 ? " travaux" : " travail")
+  : "Aucun travail";
 
       let html = "";
 
@@ -284,11 +284,11 @@
         html += `<div class="panel">
           <strong>Nouveau travail</strong>
           ${formFields()}
-          <div class="field">
-            <label>Photos</label>
-            <input id="f-photos" type="file" accept="image/*" multiple capture="environment" />
-            <p class="hint">Vous pouvez en choisir plusieurs. Elles seront compressées automatiquement.</p>
-          </div>
+         <div class="field">
+  <label>Photos</label>
+  <input id="f-photos" type="file" accept="image/*" multiple />
+  <p class="hint">Galerie ou appareil photo — plusieurs images possibles. Compression automatique.</p>
+</div>
           <div class="actions">
             <button class="btn btn-primary btn-small" type="button" data-save-add>Enregistrer</button>
             <button class="btn btn-small" type="button" data-cancel>Annuler</button>
@@ -383,23 +383,32 @@
       const editBtn = e.target.closest("[data-edit]");
       if (editBtn) { mode = editBtn.getAttribute("data-edit"); render(); return; }
 
-      if (e.target.closest("[data-save-add]")) {
-        const pin = askPassword("Mot de passe pour ajouter :");
-        if (!pin) return;
-        const f = readForm();
-        if (!f.titre) return alert("Indiquez un titre");
-        statusEl.textContent = "Envoi (photos éventuelles)…";
-        try {
-          const photos = await filesToPhotos(document.getElementById("f-photos").files);
-          await apiPost(Object.assign({ action: "add", token: pin, photos }, f));
-          // petite pause puis refresh (le POST Apps Script peut être un peu lent)
-          setTimeout(loadTravaux, 800);
-        } catch (err) {
-          alert("Erreur d’envoi. Réessayez avec moins/plus petites photos.");
-          statusEl.textContent = "Erreur";
-        }
-        return;
-      }
+     if (e.target.closest("[data-save-add]")) {
+  const pin = askPassword("Mot de passe pour ajouter :");
+  if (!pin) return;
+  const f = readForm();
+  if (!f.titre) return alert("Indiquez un titre");
+  const fileInput = document.getElementById("f-photos");
+  const nb = fileInput.files ? fileInput.files.length : 0;
+  statusEl.textContent = nb
+    ? "Compression / envoi de " + nb + " photo(s)…"
+    : "Envoi…";
+  try {
+    const photos = await filesToPhotos(fileInput.files);
+    await apiPost(Object.assign({ action: "add", token: pin, photos }, f));
+    alert(
+      "Envoi lancé" +
+        (photos.length ? " avec " + photos.length + " photo(s)" : " sans photo") +
+        ". La liste va se rafraîchir."
+    );
+    setTimeout(loadTravaux, 2500); // laisser le temps à Google
+  } catch (err) {
+    console.error(err);
+    alert("Erreur d’envoi des photos. Réessayez avec 1 image plus légère.");
+    statusEl.textContent = "Erreur";
+  }
+  return;
+}
 
       const saveEdit = e.target.closest("[data-save-edit]");
       if (saveEdit) {
