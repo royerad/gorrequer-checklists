@@ -82,7 +82,8 @@
       padding: 1rem; text-align: center; color: var(--muted);
     }
     .error { color: var(--priority); border-color: #e7b3a6; }
-    .hint { font-size: 0.8rem; color: #888; }
+    .add-frame { width: 100%; height: 740px; border: 0; border-radius: 8px; background: #fff; }
+    .add-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
   </style>
 </head>
 <body>
@@ -92,6 +93,14 @@
   <div class="top">
     <button class="btn btn-primary" type="button" id="btn-add">+ Ajouter un travail</button>
     <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
+  </div>
+
+  <div class="panel" id="add-panel" hidden>
+    <div class="add-head">
+      <strong>Nouveau travail</strong>
+      <button class="btn btn-small" type="button" id="btn-close-add">Fermer / rafraîchir</button>
+    </div>
+    <iframe class="add-frame" id="add-frame" title="Ajout travail" src="about:blank"></iframe>
   </div>
 
   <div class="filters" id="filters">
@@ -106,13 +115,16 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec";
+    const ADD_UI_URL = API_URL + "?ui=add";
 
     const listEl = document.getElementById("list");
     const statusEl = document.getElementById("status");
+    const addPanel = document.getElementById("add-panel");
+    const addFrame = document.getElementById("add-frame");
 
     let allItems = [];
     let currentFilter = "tous";
-    let mode = null; // null | 'add' | id
+    let editingId = null;
 
     function askPassword(msg) {
       const v = prompt(msg);
@@ -133,70 +145,6 @@
         script.onerror = () => reject(new Error("API"));
         document.body.appendChild(script);
       });
-    }
-
-    // Envoi fiable vers Apps Script (évite les POST fetch bloqués)
-    function apiPost(payload) {
-      return new Promise((resolve) => {
-        const frameName = "gsFrame_" + Date.now();
-        const iframe = document.createElement("iframe");
-        iframe.name = frameName;
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action = API_URL;
-        form.target = frameName;
-        form.style.display = "none";
-
-        const input = document.createElement("textarea");
-        input.name = "payload";
-        input.value = JSON.stringify(payload);
-        form.appendChild(input);
-
-        document.body.appendChild(form);
-        form.submit();
-
-        setTimeout(() => {
-          form.remove();
-          iframe.remove();
-          resolve();
-        }, 3500);
-      });
-    }
-
-    function compressImage(file, maxW = 700, quality = 0.45) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = reject;
-    reader.onload = () => {
-      const img = new Image();
-      img.onerror = reject;
-      img.onload = () => {
-        const scale = Math.min(1, maxW / img.width);
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
-        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL("image/jpeg", quality);
-        resolve({
-          name: (file.name || "photo").replace(/\.\w+$/, "") + ".jpg",
-          mimeType: "image/jpeg",
-          data: dataUrl.split(",")[1],
-        });
-      };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-    async function filesToPhotos(fileList) {
-      const files = Array.from(fileList || []);
-      const out = [];
-      for (const f of files) out.push(await compressImage(f));
-      return out;
     }
 
     function formatDate(value) {
@@ -256,7 +204,6 @@
     }
 
     function formFields(item) {
-      item = item || { titre: "", statut: "À faire", prioritaire: false, notes: "", tarif: "", personnes: "" };
       return `
         <div class="field"><label>Titre</label><input id="f-titre" value="${escapeHtml(item.titre)}" /></div>
         <div class="field"><label>Statut</label>
@@ -278,17 +225,6 @@
       `;
     }
 
-    function readForm() {
-      return {
-        titre: document.getElementById("f-titre").value.trim(),
-        statut: document.getElementById("f-statut").value,
-        prioritaire: document.getElementById("f-prio").value,
-        notes: document.getElementById("f-notes").value,
-        tarif: document.getElementById("f-tarif").value.trim(),
-        personnes: document.getElementById("f-pers").value.trim(),
-      };
-    }
-
     function render() {
       const items = allItems.filter((item) => {
         if (currentFilter === "tous") return true;
@@ -299,38 +235,19 @@
         ? items.length + (items.length > 1 ? " travaux" : " travail")
         : "Aucun travail";
 
-      let html = "";
-
-      if (mode === "add") {
-        html += `<div class="panel">
-          <strong>Nouveau travail</strong>
-          ${formFields()}
-          <div class="field">
-            <label>Photos</label>
-            <input id="f-photos" type="file" accept="image/*" multiple />
-            <p class="hint">Galerie ou appareil — plusieurs images possibles.</p>
-          </div>
-          <div class="actions">
-            <button class="btn btn-primary btn-small" type="button" data-save-add>Enregistrer</button>
-            <button class="btn btn-small" type="button" data-cancel>Annuler</button>
-          </div>
-        </div>`;
-      }
-
-      if (!items.length && mode !== "add") {
-        html += '<div class="empty">Aucun travail pour le moment.</div>';
-        listEl.innerHTML = html;
+      if (!items.length) {
+        listEl.innerHTML = '<div class="empty">Aucun travail pour le moment.</div>';
         return;
       }
 
-      html += items.map((item) => {
-        if (mode === item.id) {
+      listEl.innerHTML = items.map((item) => {
+        if (editingId === item.id) {
           return `<details class="item ${item.prioritaire ? "prio" : ""}" open>
             <summary><div class="title">Modification</div><span class="chevron">›</span></summary>
             <div class="content">
               ${formFields(item)}
               <div class="actions">
-                <button class="btn btn-primary btn-small" type="button" data-save-edit="${escapeHtml(item.id)}">Enregistrer</button>
+                <button class="btn btn-primary btn-small" type="button" data-save="${escapeHtml(item.id)}">Enregistrer</button>
                 <button class="btn btn-small" type="button" data-cancel>Annuler</button>
               </div>
             </div>
@@ -369,8 +286,6 @@
           </div>
         </details>`;
       }).join("");
-
-      listEl.innerHTML = html;
     }
 
     async function loadTravaux() {
@@ -378,7 +293,7 @@
       try {
         const data = await apiGet({ action: "list" });
         allItems = (Array.isArray(data) ? data : []).map(normalize);
-        mode = null;
+        editingId = null;
         render();
       } catch (e) {
         statusEl.textContent = "Erreur";
@@ -386,7 +301,18 @@
       }
     }
 
-    document.getElementById("btn-add").onclick = () => { mode = "add"; render(); };
+    document.getElementById("btn-add").onclick = () => {
+      addFrame.src = ADD_UI_URL;
+      addPanel.hidden = false;
+      addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    document.getElementById("btn-close-add").onclick = () => {
+      addPanel.hidden = true;
+      addFrame.src = "about:blank";
+      loadTravaux();
+    };
+
     document.getElementById("btn-refresh").onclick = loadTravaux;
 
     document.getElementById("filters").addEventListener("click", (e) => {
@@ -399,51 +325,26 @@
     });
 
     listEl.addEventListener("click", async (e) => {
-      if (e.target.closest("[data-save-add]")) {
-  const pin = askPassword("Mot de passe pour ajouter :");
-  if (!pin) return;
-  const f = readForm();
-  if (!f.titre) return alert("Indiquez un titre");
+      if (e.target.closest("[data-cancel]")) { editingId = null; render(); return; }
 
-  statusEl.textContent = "Création du travail…";
-  try {
-    const created = await apiGet(Object.assign({ action: "add", token: pin }, f));
-    if (!created || !created.ok) {
-      return alert((created && created.error) || "Erreur création");
-    }
+      const editBtn = e.target.closest("[data-edit]");
+      if (editBtn) { editingId = editBtn.getAttribute("data-edit"); render(); return; }
 
-    const fileInput = document.getElementById("f-photos");
-    const file = fileInput.files && fileInput.files[0]; // 1 photo d'abord
-    if (file) {
-      statusEl.textContent = "Envoi de la photo…";
-      const photo = await compressImage(file);
-      await apiPost({
-        action: "addPhotos",
-        token: pin,
-        id: created.id,
-        row: created.row, // <-- clé
-        photos: [photo],
-      });
-    }
-
-    alert("Terminé. Si la photo manque, regardez Apps Script > Exécutions.");
-    setTimeout(loadTravaux, 1500);
-  } catch (err) {
-    console.error(err);
-    alert("Erreur pendant l’ajout.");
-    await loadTravaux();
-  }
-  return;
-}
-
-      const saveEdit = e.target.closest("[data-save-edit]");
-      if (saveEdit) {
+      const saveBtn = e.target.closest("[data-save]");
+      if (saveBtn) {
         const pin = askPassword("Mot de passe pour enregistrer :");
         if (!pin) return;
-        const f = readForm();
-        const res = await apiGet(Object.assign({
-          action: "update", token: pin, id: saveEdit.getAttribute("data-save-edit")
-        }, f));
+        const res = await apiGet({
+          action: "update",
+          token: pin,
+          id: saveBtn.getAttribute("data-save"),
+          titre: document.getElementById("f-titre").value,
+          statut: document.getElementById("f-statut").value,
+          prioritaire: document.getElementById("f-prio").value,
+          notes: document.getElementById("f-notes").value,
+          tarif: document.getElementById("f-tarif").value,
+          personnes: document.getElementById("f-pers").value,
+        });
         if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await loadTravaux();
         return;
@@ -455,7 +356,9 @@
         if (!pin) return;
         if (!confirm("Supprimer ce travail ?")) return;
         const res = await apiGet({
-          action: "delete", token: pin, id: delBtn.getAttribute("data-delete")
+          action: "delete",
+          token: pin,
+          id: delBtn.getAttribute("data-delete"),
         });
         if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await loadTravaux();
@@ -466,19 +369,4 @@
       if (photoBtn) {
         const pin = askPassword("Mot de passe pour retirer la photo :");
         if (!pin) return;
-        if (!confirm("Retirer cette photo ?")) return;
-        const res = await apiGet({
-          action: "removePhoto",
-          token: pin,
-          id: photoBtn.getAttribute("data-del-photo"),
-          photoUrl: photoBtn.getAttribute("data-photo-url"),
-        });
-        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
-        await loadTravaux();
-      }
-    });
-
-    loadTravaux();
-  </script>
-</body>
-</html>
+        if (!confirm("Retirer cette
