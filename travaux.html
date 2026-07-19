@@ -103,6 +103,35 @@
     }
     .error { border-color: #e7b3a6; color: var(--priority); }
     .hint { font-size: 0.8rem; color: #888; margin: 0.5rem 0 0; }
+
+    /* Panneau Form intégré */
+    .add-panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .add-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .add-panel-header strong { font-size: 1.05rem; }
+    .add-panel iframe {
+      width: 100%;
+      height: 720px;
+      border: 0;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .add-actions {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
   </style>
 </head>
 <body>
@@ -110,8 +139,26 @@
   <p class="subtitle">À faire, en cours ou terminés</p>
 
   <div class="top">
-    <a class="btn btn-primary" id="btn-add" target="_blank" rel="noopener">+ Ajouter un travail</a>
+    <button class="btn btn-primary" type="button" id="btn-add">+ Ajouter un travail</button>
     <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
+  </div>
+
+  <div class="add-panel" id="add-panel" hidden>
+    <div class="add-panel-header">
+      <strong>Nouveau travail</strong>
+      <button class="btn btn-small" type="button" id="btn-close-add">Fermer</button>
+    </div>
+    <iframe
+      id="form-frame"
+      title="Formulaire nouveau travail"
+      src="about:blank"
+    ></iframe>
+    <div class="add-actions">
+      <button class="btn btn-primary btn-small" type="button" id="btn-done-add">
+        J’ai envoyé le formulaire — rafraîchir la liste
+      </button>
+    </div>
+    <p class="hint">Remplissez le formulaire (photos comprises), envoyez-le, puis cliquez sur le bouton ci-dessus.</p>
   </div>
 
   <div class="filters" id="filters">
@@ -126,13 +173,14 @@
 
   <script>
     // ===== À COMPLÉTER =====
-    const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec";
-    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdxioUmnwt7ddwgv5pkLyb3HpkCAzf4WhoIR-RktOOsO8rFsw/viewform";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec?";
+    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdxioUmnwt7ddwgv5pkLyb3HpkCAzf4WhoIR-RktOOsO8rFsw/viewform?embedded=true";
     // =======================
 
     const listEl = document.getElementById("list");
     const statusEl = document.getElementById("status");
-    document.getElementById("btn-add").href = FORM_URL;
+    const addPanel = document.getElementById("add-panel");
+    const formFrame = document.getElementById("form-frame");
 
     let allItems = [];
     let currentFilter = "tous";
@@ -230,6 +278,22 @@
         .replaceAll('"', "&quot;");
     }
 
+    function openAddPanel() {
+      formFrame.src = FORM_URL;
+      addPanel.hidden = false;
+      addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function closeAddPanel(refresh) {
+      addPanel.hidden = true;
+      formFrame.src = "about:blank";
+      if (refresh) loadTravaux();
+    }
+
+    document.getElementById("btn-add").onclick = openAddPanel;
+    document.getElementById("btn-close-add").onclick = () => closeAddPanel(false);
+    document.getElementById("btn-done-add").onclick = () => closeAddPanel(true);
+
     function render() {
       const items = allItems.filter((item) => {
         if (currentFilter === "tous") return true;
@@ -315,7 +379,6 @@
                 <button class="btn btn-small" type="button" data-edit="${escapeHtml(item.id)}">Modifier</button>
                 <button class="btn btn-small btn-danger" type="button" data-delete="${escapeHtml(item.id)}">Supprimer</button>
               </div>
-              <p class="hint">Pour ajouter des photos, créez un nouveau travail via le bouton +.</p>
             </div>
           </details>`;
       }).join("");
@@ -341,17 +404,8 @@
       const cancelBtn = e.target.closest("[data-cancel]");
       const photoBtn = e.target.closest("[data-del-photo]");
 
-      if (cancelBtn) {
-        editingId = null;
-        render();
-        return;
-      }
-
-      if (editBtn) {
-        editingId = editBtn.getAttribute("data-edit");
-        render();
-        return;
-      }
+      if (cancelBtn) { editingId = null; render(); return; }
+      if (editBtn) { editingId = editBtn.getAttribute("data-edit"); render(); return; }
 
       if (saveBtn) {
         const pin = askPassword("Mot de passe pour enregistrer :");
