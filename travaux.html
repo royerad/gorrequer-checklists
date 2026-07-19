@@ -135,14 +135,36 @@
       });
     }
 
-async function apiPost(payload) {
-  await fetch(API_URL, {
-    method: "POST",
-    mode: "no-cors", // important pour que l'envoi parte bien vers Apps Script
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload),
-  });
-}
+    // Envoi fiable vers Apps Script (évite les POST fetch bloqués)
+    function apiPost(payload) {
+      return new Promise((resolve) => {
+        const frameName = "gsFrame_" + Date.now();
+        const iframe = document.createElement("iframe");
+        iframe.name = frameName;
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = API_URL;
+        form.target = frameName;
+        form.style.display = "none";
+
+        const input = document.createElement("textarea");
+        input.name = "payload";
+        input.value = JSON.stringify(payload);
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+
+        setTimeout(() => {
+          form.remove();
+          iframe.remove();
+          resolve();
+        }, 3500);
+      });
+    }
 
     function compressImage(file, maxW = 1200, quality = 0.7) {
       return new Promise((resolve, reject) => {
@@ -158,11 +180,10 @@ async function apiPost(payload) {
             canvas.height = Math.round(img.height * scale);
             canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
             const dataUrl = canvas.toDataURL("image/jpeg", quality);
-            const base64 = dataUrl.split(",")[1];
             resolve({
               name: (file.name || "photo").replace(/\.\w+$/, "") + ".jpg",
               mimeType: "image/jpeg",
-              data: base64,
+              data: dataUrl.split(",")[1],
             });
           };
           img.src = reader.result;
@@ -274,9 +295,9 @@ async function apiPost(payload) {
         return String(item.statut).toLowerCase() === currentFilter.toLowerCase();
       });
 
-    statusEl.textContent = items.length
-  ? items.length + (items.length > 1 ? " travaux" : " travail")
-  : "Aucun travail";
+      statusEl.textContent = items.length
+        ? items.length + (items.length > 1 ? " travaux" : " travail")
+        : "Aucun travail";
 
       let html = "";
 
@@ -284,11 +305,11 @@ async function apiPost(payload) {
         html += `<div class="panel">
           <strong>Nouveau travail</strong>
           ${formFields()}
-         <div class="field">
-  <label>Photos</label>
-  <input id="f-photos" type="file" accept="image/*" multiple />
-  <p class="hint">Galerie ou appareil photo — plusieurs images possibles. Compression automatique.</p>
-</div>
+          <div class="field">
+            <label>Photos</label>
+            <input id="f-photos" type="file" accept="image/*" multiple />
+            <p class="hint">Galerie ou appareil — plusieurs images possibles.</p>
+          </div>
           <div class="actions">
             <button class="btn btn-primary btn-small" type="button" data-save-add>Enregistrer</button>
             <button class="btn btn-small" type="button" data-cancel>Annuler</button>
@@ -383,32 +404,29 @@ async function apiPost(payload) {
       const editBtn = e.target.closest("[data-edit]");
       if (editBtn) { mode = editBtn.getAttribute("data-edit"); render(); return; }
 
-     if (e.target.closest("[data-save-add]")) {
-  const pin = askPassword("Mot de passe pour ajouter :");
-  if (!pin) return;
-  const f = readForm();
-  if (!f.titre) return alert("Indiquez un titre");
-  const fileInput = document.getElementById("f-photos");
-  const nb = fileInput.files ? fileInput.files.length : 0;
-  statusEl.textContent = nb
-    ? "Compression / envoi de " + nb + " photo(s)…"
-    : "Envoi…";
-  try {
-    const photos = await filesToPhotos(fileInput.files);
-    await apiPost(Object.assign({ action: "add", token: pin, photos }, f));
-    alert(
-      "Envoi lancé" +
-        (photos.length ? " avec " + photos.length + " photo(s)" : " sans photo") +
-        ". La liste va se rafraîchir."
-    );
-    setTimeout(loadTravaux, 2500); // laisser le temps à Google
-  } catch (err) {
-    console.error(err);
-    alert("Erreur d’envoi des photos. Réessayez avec 1 image plus légère.");
-    statusEl.textContent = "Erreur";
-  }
-  return;
-}
+      if (e.target.closest("[data-save-add]")) {
+        const pin = askPassword("Mot de passe pour ajouter :");
+        if (!pin) return;
+        const f = readForm();
+        if (!f.titre) return alert("Indiquez un titre");
+
+        const fileInput = document.getElementById("f-photos");
+        const nb = fileInput.files ? fileInput.files.length : 0;
+        statusEl.textContent = nb ? "Préparation de " + nb + " photo(s)…" : "Envoi…";
+
+        try {
+          const photos = await filesToPhotos(fileInput.files);
+          statusEl.textContent = "Envoi vers Google…";
+          await apiPost(Object.assign({ action: "add", token: pin, photos }, f));
+          alert("Envoi terminé. La liste se rafraîchit.");
+          await loadTravaux();
+        } catch (err) {
+          console.error(err);
+          alert("Erreur d’envoi. Réessayez avec moins de photos / images plus légères.");
+          statusEl.textContent = "Erreur";
+        }
+        return;
+      }
 
       const saveEdit = e.target.closest("[data-save-edit]");
       if (saveEdit) {
