@@ -301,7 +301,9 @@ function normalize(row) {
   return {
     titre: row.titre || "",
     statut: row.statut || "À faire",
-    prioritaire: String(row.prioritaire || "").toLowerCase() === "oui",
+  prioritaire: ["oui", "urgent", "yes", "true", "1"].includes(
+  String(row.prioritaire || "").toLowerCase()
+),
     date: row.horodatage || "",
     notes: row.notes || "",
     tarif: row.tarif || "",
