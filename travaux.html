@@ -166,31 +166,31 @@
       });
     }
 
-    function compressImage(file, maxW = 1200, quality = 0.7) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onerror = reject;
-        reader.onload = () => {
-          const img = new Image();
-          img.onerror = reject;
-          img.onload = () => {
-            const scale = Math.min(1, maxW / img.width);
-            const canvas = document.createElement("canvas");
-            canvas.width = Math.round(img.width * scale);
-            canvas.height = Math.round(img.height * scale);
-            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL("image/jpeg", quality);
-            resolve({
-              name: (file.name || "photo").replace(/\.\w+$/, "") + ".jpg",
-              mimeType: "image/jpeg",
-              data: dataUrl.split(",")[1],
-            });
-          };
-          img.src = reader.result;
-        };
-        reader.readAsDataURL(file);
-      });
-    }
+    function compressImage(file, maxW = 700, quality = 0.45) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        resolve({
+          name: (file.name || "photo").replace(/\.\w+$/, "") + ".jpg",
+          mimeType: "image/jpeg",
+          data: dataUrl.split(",")[1],
+        });
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
     async function filesToPhotos(fileList) {
       const files = Array.from(fileList || []);
@@ -399,34 +399,42 @@
     });
 
     listEl.addEventListener("click", async (e) => {
-      if (e.target.closest("[data-cancel]")) { mode = null; render(); return; }
-
-      const editBtn = e.target.closest("[data-edit]");
-      if (editBtn) { mode = editBtn.getAttribute("data-edit"); render(); return; }
-
       if (e.target.closest("[data-save-add]")) {
-        const pin = askPassword("Mot de passe pour ajouter :");
-        if (!pin) return;
-        const f = readForm();
-        if (!f.titre) return alert("Indiquez un titre");
+  const pin = askPassword("Mot de passe pour ajouter :");
+  if (!pin) return;
+  const f = readForm();
+  if (!f.titre) return alert("Indiquez un titre");
 
-        const fileInput = document.getElementById("f-photos");
-        const nb = fileInput.files ? fileInput.files.length : 0;
-        statusEl.textContent = nb ? "Préparation de " + nb + " photo(s)…" : "Envoi…";
+  statusEl.textContent = "Création du travail…";
+  try {
+    const created = await apiGet(Object.assign({ action: "add", token: pin }, f));
+    if (!created || !created.ok) {
+      return alert((created && created.error) || "Erreur création");
+    }
 
-        try {
-          const photos = await filesToPhotos(fileInput.files);
-          statusEl.textContent = "Envoi vers Google…";
-          await apiPost(Object.assign({ action: "add", token: pin, photos }, f));
-          alert("Envoi terminé. La liste se rafraîchit.");
-          await loadTravaux();
-        } catch (err) {
-          console.error(err);
-          alert("Erreur d’envoi. Réessayez avec moins de photos / images plus légères.");
-          statusEl.textContent = "Erreur";
-        }
-        return;
-      }
+    const fileInput = document.getElementById("f-photos");
+    const file = fileInput.files && fileInput.files[0]; // 1 photo d'abord
+    if (file) {
+      statusEl.textContent = "Envoi de la photo…";
+      const photo = await compressImage(file);
+      await apiPost({
+        action: "addPhotos",
+        token: pin,
+        id: created.id,
+        row: created.row, // <-- clé
+        photos: [photo],
+      });
+    }
+
+    alert("Terminé. Si la photo manque, regardez Apps Script > Exécutions.");
+    setTimeout(loadTravaux, 1500);
+  } catch (err) {
+    console.error(err);
+    alert("Erreur pendant l’ajout.");
+    await loadTravaux();
+  }
+  return;
+}
 
       const saveEdit = e.target.closest("[data-save-edit]");
       if (saveEdit) {
