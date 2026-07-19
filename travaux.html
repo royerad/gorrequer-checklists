@@ -6,22 +6,14 @@
   <title>Travaux — Gorrequer</title>
   <style>
     :root {
-      --bg: #f6f4f1;
-      --card: #fff;
-      --text: #1c1c1c;
-      --muted: #666;
-      --line: #e4e0da;
-      --priority: #8a3b2c;
-      --ok: #2f5d50;
+      --bg: #f6f4f1; --card: #fff; --text: #1c1c1c; --muted: #666;
+      --line: #e4e0da; --priority: #8a3b2c; --ok: #2f5d50;
     }
     * { box-sizing: border-box; }
     body {
       font-family: system-ui, -apple-system, sans-serif;
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 1rem;
-      background: var(--bg);
-      color: var(--text);
+      max-width: 520px; margin: 0 auto; padding: 1rem;
+      background: var(--bg); color: var(--text);
     }
     h1 { margin: 0 0 0.35rem; font-size: 1.5rem; }
     .subtitle { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
@@ -29,13 +21,9 @@
     .btn {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 0.7rem 0.9rem; border-radius: 10px; border: 1px solid var(--line);
-      background: var(--card); color: var(--text); font-size: 0.95rem;
-      text-decoration: none; cursor: pointer;
+      background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer;
     }
-    .btn-primary {
-      background: var(--ok); border-color: var(--ok); color: #fff;
-      flex: 1; font-weight: 600;
-    }
+    .btn-primary { background: var(--ok); border-color: var(--ok); color: #fff; flex: 1; font-weight: 600; }
     .btn-danger { border-color: #e7b3a6; color: var(--priority); }
     .btn-small { padding: 0.45rem 0.65rem; font-size: 0.85rem; }
     .filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
@@ -43,36 +31,31 @@
       border: 1px solid var(--line); background: var(--card); border-radius: 999px;
       padding: 0.35rem 0.7rem; font-size: 0.85rem; cursor: pointer;
     }
-    .chip.active {
-      background: #e8efeC; border-color: #b7cfc6; color: var(--ok); font-weight: 600;
-    }
+    .chip.active { background: #e8efeC; border-color: #b7cfc6; color: var(--ok); font-weight: 600; }
     .status { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.9rem; }
-    details.item {
+    details.item, .panel {
       background: var(--card); border: 1px solid var(--line);
       border-radius: 12px; margin: 0.55rem 0; overflow: hidden;
     }
     details.item.prio { border-left: 4px solid var(--priority); }
+    .panel { padding: 0.85rem; }
     summary {
       list-style: none; display: grid; grid-template-columns: 1fr auto;
       gap: 0.35rem 0.75rem; padding: 0.85rem 0.95rem; cursor: pointer;
     }
     summary::-webkit-details-marker { display: none; }
     .title { font-weight: 700; line-height: 1.3; }
-    .meta {
-      grid-column: 1 / -1; display: flex; flex-wrap: wrap;
-      gap: 0.35rem; align-items: center;
-    }
+    .meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
     .tag {
-      display: inline-block; font-size: 0.72rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.03em;
-      padding: 0.15rem 0.45rem; border-radius: 999px; background: #eee; color: #444;
+      display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.03em; padding: 0.15rem 0.45rem; border-radius: 999px; background: #eee;
     }
     .tag.todo { background: #f3e4e0; color: var(--priority); }
     .tag.doing { background: #fff3d6; color: #8a6a14; }
     .tag.done { background: #e5f0eb; color: var(--ok); }
     .tag.prio { background: #f3e4e0; color: var(--priority); }
     .date { font-size: 0.85rem; color: var(--muted); }
-    .chevron { color: var(--muted); transition: transform 0.15s ease; }
+    .chevron { color: var(--muted); transition: transform .15s ease; }
     details[open] .chevron { transform: rotate(90deg); }
     .content { padding: 0.75rem 0.95rem 1rem; border-top: 1px solid var(--line); }
     .field { margin: 0.65rem 0; }
@@ -80,58 +63,26 @@
       display: block; font-size: 0.78rem; text-transform: uppercase;
       letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.25rem;
     }
-    .field p { margin: 0; font-size: 0.98rem; line-height: 1.4; white-space: pre-wrap; }
+    .field p { margin: 0; white-space: pre-wrap; }
     input, select, textarea {
       width: 100%; padding: 0.55rem 0.65rem; border: 1px solid var(--line);
       border-radius: 8px; font: inherit; background: #fff;
     }
-    textarea { min-height: 90px; resize: vertical; }
+    textarea { min-height: 90px; }
     .photos { display: grid; gap: 0.5rem; }
     .photo-wrap { position: relative; }
-    .photos img {
-      width: 100%; height: auto; border-radius: 8px; display: block; background: #eee;
-    }
+    .photos img { width: 100%; border-radius: 8px; display: block; background: #eee; }
     .photo-del {
       position: absolute; top: 0.4rem; right: 0.4rem; border: none; border-radius: 999px;
-      background: rgba(0,0,0,.65); color: #fff; width: 2rem; height: 2rem;
-      cursor: pointer; font-size: 1rem;
+      background: rgba(0,0,0,.65); color: #fff; width: 2rem; height: 2rem; cursor: pointer;
     }
     .actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
     .empty, .error {
       background: var(--card); border: 1px dashed var(--line); border-radius: 12px;
-      padding: 1rem; color: var(--muted); text-align: center;
+      padding: 1rem; text-align: center; color: var(--muted);
     }
-    .error { border-color: #e7b3a6; color: var(--priority); }
-    .hint { font-size: 0.8rem; color: #888; margin: 0.5rem 0 0; }
-
-    /* Panneau Form intégré */
-    .add-panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-    }
-    .add-panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .add-panel-header strong { font-size: 1.05rem; }
-    .add-panel iframe {
-      width: 100%;
-      height: 720px;
-      border: 0;
-      border-radius: 8px;
-      background: #fff;
-    }
-    .add-actions {
-      display: flex;
-      gap: 0.4rem;
-      margin-top: 0.6rem;
-    }
+    .error { color: var(--priority); border-color: #e7b3a6; }
+    .hint { font-size: 0.8rem; color: #888; }
   </style>
 </head>
 <body>
@@ -141,24 +92,6 @@
   <div class="top">
     <button class="btn btn-primary" type="button" id="btn-add">+ Ajouter un travail</button>
     <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
-  </div>
-
-  <div class="add-panel" id="add-panel" hidden>
-    <div class="add-panel-header">
-      <strong>Nouveau travail</strong>
-      <button class="btn btn-small" type="button" id="btn-close-add">Fermer</button>
-    </div>
-    <iframe
-      id="form-frame"
-      title="Formulaire nouveau travail"
-      src="about:blank"
-    ></iframe>
-    <div class="add-actions">
-      <button class="btn btn-primary btn-small" type="button" id="btn-done-add">
-        J’ai envoyé le formulaire — rafraîchir la liste
-      </button>
-    </div>
-    <p class="hint">Remplissez le formulaire (photos comprises), envoyez-le, puis cliquez sur le bouton ci-dessus.</p>
   </div>
 
   <div class="filters" id="filters">
@@ -172,40 +105,28 @@
   <div id="list"></div>
 
   <script>
-    // ===== À COMPLÉTER =====
-    const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec?";
-    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdxioUmnwt7ddwgv5pkLyb3HpkCAzf4WhoIR-RktOOsO8rFsw/viewform?embedded=true";
-    // =======================
+    const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec";
 
     const listEl = document.getElementById("list");
     const statusEl = document.getElementById("status");
-    const addPanel = document.getElementById("add-panel");
-    const formFrame = document.getElementById("form-frame");
 
     let allItems = [];
     let currentFilter = "tous";
-    let editingId = null;
+    let mode = null; // null | 'add' | id
 
     function askPassword(msg) {
       const v = prompt(msg);
       if (v === null) return null;
       const t = v.trim();
-      if (!t) {
-        alert("Mot de passe vide");
-        return null;
-      }
+      if (!t) { alert("Mot de passe vide"); return null; }
       return t;
     }
 
-    function api(params) {
+    function apiGet(params) {
       return new Promise((resolve, reject) => {
         const cb = "__cb_" + Date.now();
         const script = document.createElement("script");
-        window[cb] = (data) => {
-          resolve(data);
-          delete window[cb];
-          script.remove();
-        };
+        window[cb] = (data) => { resolve(data); delete window[cb]; script.remove(); };
         const q = new URLSearchParams(params);
         q.set("callback", cb);
         script.src = API_URL + "?" + q.toString();
@@ -214,13 +135,54 @@
       });
     }
 
+    async function apiPost(payload) {
+      // text/plain = évite beaucoup de blocages CORS
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      });
+    }
+
+    function compressImage(file, maxW = 1200, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = reject;
+          img.onload = () => {
+            const scale = Math.min(1, maxW / img.width);
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL("image/jpeg", quality);
+            const base64 = dataUrl.split(",")[1];
+            resolve({
+              name: (file.name || "photo").replace(/\.\w+$/, "") + ".jpg",
+              mimeType: "image/jpeg",
+              data: base64,
+            });
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function filesToPhotos(fileList) {
+      const files = Array.from(fileList || []);
+      const out = [];
+      for (const f of files) out.push(await compressImage(f));
+      return out;
+    }
+
     function formatDate(value) {
       if (!value) return "—";
       const d = new Date(value);
       if (Number.isNaN(d.getTime())) return String(value);
-      return d.toLocaleDateString("fr-FR", {
-        day: "2-digit", month: "short", year: "numeric"
-      });
+      return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
     }
 
     function isPriority(value) {
@@ -237,8 +199,7 @@
 
     function driveId(url) {
       const s = String(url);
-      return (s.match(/\/d\/([^/]+)/) || [])[1] ||
-             (s.match(/[?&]id=([^&]+)/) || [])[1] || null;
+      return (s.match(/\/d\/([^/]+)/) || [])[1] || (s.match(/[?&]id=([^&]+)/) || [])[1] || null;
     }
 
     function imgUrl(url) {
@@ -248,10 +209,7 @@
 
     function parsePhotos(value) {
       if (!value) return [];
-      return String(value)
-        .split(/[\s,;]+/)
-        .map((x) => x.trim())
-        .filter((x) => /^https?:\/\//i.test(x));
+      return String(value).split(/[\s,;]+/).map((x) => x.trim()).filter((x) => /^https?:\/\//i.test(x));
     }
 
     function normalize(row) {
@@ -272,27 +230,43 @@
 
     function escapeHtml(str) {
       return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
+        .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
     }
 
-    function openAddPanel() {
-      formFrame.src = FORM_URL;
-      addPanel.hidden = false;
-      addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    function formFields(item) {
+      item = item || { titre: "", statut: "À faire", prioritaire: false, notes: "", tarif: "", personnes: "" };
+      return `
+        <div class="field"><label>Titre</label><input id="f-titre" value="${escapeHtml(item.titre)}" /></div>
+        <div class="field"><label>Statut</label>
+          <select id="f-statut">
+            <option ${item.statut === "À faire" ? "selected" : ""}>À faire</option>
+            <option ${item.statut === "En cours" ? "selected" : ""}>En cours</option>
+            <option ${item.statut === "Terminé" ? "selected" : ""}>Terminé</option>
+          </select>
+        </div>
+        <div class="field"><label>Priorité</label>
+          <select id="f-prio">
+            <option value="Non" ${!item.prioritaire ? "selected" : ""}>Non</option>
+            <option value="Urgent" ${item.prioritaire ? "selected" : ""}>Urgent</option>
+          </select>
+        </div>
+        <div class="field"><label>Notes</label><textarea id="f-notes">${escapeHtml(item.notes || "")}</textarea></div>
+        <div class="field"><label>Tarif</label><input id="f-tarif" value="${escapeHtml(item.tarif || "")}" /></div>
+        <div class="field"><label>Responsable</label><input id="f-pers" value="${escapeHtml(item.personnes || "")}" /></div>
+      `;
     }
 
-    function closeAddPanel(refresh) {
-      addPanel.hidden = true;
-      formFrame.src = "about:blank";
-      if (refresh) loadTravaux();
+    function readForm() {
+      return {
+        titre: document.getElementById("f-titre").value.trim(),
+        statut: document.getElementById("f-statut").value,
+        prioritaire: document.getElementById("f-prio").value,
+        notes: document.getElementById("f-notes").value,
+        tarif: document.getElementById("f-tarif").value.trim(),
+        personnes: document.getElementById("f-pers").value.trim(),
+      };
     }
-
-    document.getElementById("btn-add").onclick = openAddPanel;
-    document.getElementById("btn-close-add").onclick = () => closeAddPanel(false);
-    document.getElementById("btn-done-add").onclick = () => closeAddPanel(true);
 
     function render() {
       const items = allItems.filter((item) => {
@@ -304,92 +278,86 @@
         ? items.length + " travail" + (items.length > 1 ? "x" : "")
         : "Aucun travail";
 
-      if (!items.length) {
-        listEl.innerHTML = '<div class="empty">Aucun travail pour le moment.</div>';
+      let html = "";
+
+      if (mode === "add") {
+        html += `<div class="panel">
+          <strong>Nouveau travail</strong>
+          ${formFields()}
+          <div class="field">
+            <label>Photos</label>
+            <input id="f-photos" type="file" accept="image/*" multiple capture="environment" />
+            <p class="hint">Vous pouvez en choisir plusieurs. Elles seront compressées automatiquement.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="button" data-save-add>Enregistrer</button>
+            <button class="btn btn-small" type="button" data-cancel>Annuler</button>
+          </div>
+        </div>`;
+      }
+
+      if (!items.length && mode !== "add") {
+        html += '<div class="empty">Aucun travail pour le moment.</div>';
+        listEl.innerHTML = html;
         return;
       }
 
-      listEl.innerHTML = items.map((item) => {
-        if (editingId === item.id) {
-          return `
-            <details class="item ${item.prioritaire ? "prio" : ""}" open>
-              <summary>
-                <div class="title">Modification</div>
-                <span class="chevron">›</span>
-              </summary>
-              <div class="content">
-                <div class="field"><label>Titre</label>
-                  <input id="e-titre" value="${escapeHtml(item.titre)}" /></div>
-                <div class="field"><label>Statut</label>
-                  <select id="e-statut">
-                    <option ${item.statut === "À faire" ? "selected" : ""}>À faire</option>
-                    <option ${item.statut === "En cours" ? "selected" : ""}>En cours</option>
-                    <option ${item.statut === "Terminé" ? "selected" : ""}>Terminé</option>
-                  </select>
-                </div>
-                <div class="field"><label>Priorité</label>
-                  <select id="e-prio">
-                    <option value="Non" ${!item.prioritaire ? "selected" : ""}>Non</option>
-                    <option value="Urgent" ${item.prioritaire ? "selected" : ""}>Urgent</option>
-                  </select>
-                </div>
-                <div class="field"><label>Notes</label>
-                  <textarea id="e-notes">${escapeHtml(item.notes)}</textarea></div>
-                <div class="field"><label>Tarif</label>
-                  <input id="e-tarif" value="${escapeHtml(item.tarif)}" /></div>
-                <div class="field"><label>Responsable</label>
-                  <input id="e-pers" value="${escapeHtml(item.personnes)}" /></div>
-                <div class="actions">
-                  <button class="btn btn-primary btn-small" type="button" data-save="${escapeHtml(item.id)}">Enregistrer</button>
-                  <button class="btn btn-small" type="button" data-cancel>Annuler</button>
-                </div>
-              </div>
-            </details>`;
-        }
-
-        const photosHtml = item.photos.length
-          ? `<div class="field"><label>Photos</label><div class="photos">${
-              item.photos.map((src, i) => `
-                <div class="photo-wrap">
-                  <img src="${src}" alt="Photo" loading="lazy" />
-                  <button class="photo-del" type="button"
-                    data-del-photo="${escapeHtml(item.id)}"
-                    data-photo-url="${escapeHtml(item.photosOriginal[i])}">×</button>
-                </div>`).join("")
-            }</div></div>`
-          : `<div class="field"><label>Photos</label><p>—</p></div>`;
-
-        return `
-          <details class="item ${item.prioritaire ? "prio" : ""}">
-            <summary>
-              <div class="title">${escapeHtml(item.titre)}</div>
-              <span class="chevron">›</span>
-              <div class="meta">
-                <span class="tag ${statusClass(item.statut)}">${escapeHtml(item.statut)}</span>
-                ${item.prioritaire ? '<span class="tag prio">Urgent</span>' : ""}
-                <span class="date">${escapeHtml(formatDate(item.date))}</span>
-              </div>
-            </summary>
+      html += items.map((item) => {
+        if (mode === item.id) {
+          return `<details class="item ${item.prioritaire ? "prio" : ""}" open>
+            <summary><div class="title">Modification</div><span class="chevron">›</span></summary>
             <div class="content">
-              <div class="field"><label>Notes</label><p>${escapeHtml(item.notes || "—")}</p></div>
-              <div class="field"><label>Tarif</label><p>${escapeHtml(item.tarif || "—")}</p></div>
-              <div class="field"><label>Responsable</label><p>${escapeHtml(item.personnes || "—")}</p></div>
-              ${photosHtml}
+              ${formFields(item)}
               <div class="actions">
-                <button class="btn btn-small" type="button" data-edit="${escapeHtml(item.id)}">Modifier</button>
-                <button class="btn btn-small btn-danger" type="button" data-delete="${escapeHtml(item.id)}">Supprimer</button>
+                <button class="btn btn-primary btn-small" type="button" data-save-edit="${escapeHtml(item.id)}">Enregistrer</button>
+                <button class="btn btn-small" type="button" data-cancel>Annuler</button>
               </div>
             </div>
           </details>`;
+        }
+
+        const photosHtml = item.photos.length
+          ? `<div class="field"><label>Photos</label><div class="photos">${item.photos.map((src, i) => `
+              <div class="photo-wrap">
+                <img src="${src}" alt="Photo" loading="lazy" />
+                <button class="photo-del" type="button"
+                  data-del-photo="${escapeHtml(item.id)}"
+                  data-photo-url="${escapeHtml(item.photosOriginal[i])}">×</button>
+              </div>`).join("")}</div></div>`
+          : `<div class="field"><label>Photos</label><p>—</p></div>`;
+
+        return `<details class="item ${item.prioritaire ? "prio" : ""}">
+          <summary>
+            <div class="title">${escapeHtml(item.titre)}</div>
+            <span class="chevron">›</span>
+            <div class="meta">
+              <span class="tag ${statusClass(item.statut)}">${escapeHtml(item.statut)}</span>
+              ${item.prioritaire ? '<span class="tag prio">Urgent</span>' : ""}
+              <span class="date">${escapeHtml(formatDate(item.date))}</span>
+            </div>
+          </summary>
+          <div class="content">
+            <div class="field"><label>Notes</label><p>${escapeHtml(item.notes || "—")}</p></div>
+            <div class="field"><label>Tarif</label><p>${escapeHtml(item.tarif || "—")}</p></div>
+            <div class="field"><label>Responsable</label><p>${escapeHtml(item.personnes || "—")}</p></div>
+            ${photosHtml}
+            <div class="actions">
+              <button class="btn btn-small" type="button" data-edit="${escapeHtml(item.id)}">Modifier</button>
+              <button class="btn btn-small btn-danger" type="button" data-delete="${escapeHtml(item.id)}">Supprimer</button>
+            </div>
+          </div>
+        </details>`;
       }).join("");
+
+      listEl.innerHTML = html;
     }
 
     async function loadTravaux() {
       statusEl.textContent = "Chargement…";
       try {
-        const data = await api({ action: "list" });
+        const data = await apiGet({ action: "list" });
         allItems = (Array.isArray(data) ? data : []).map(normalize);
-        editingId = null;
+        mode = null;
         render();
       } catch (e) {
         statusEl.textContent = "Erreur";
@@ -397,65 +365,8 @@
       }
     }
 
-    listEl.addEventListener("click", async (e) => {
-      const editBtn = e.target.closest("[data-edit]");
-      const delBtn = e.target.closest("[data-delete]");
-      const saveBtn = e.target.closest("[data-save]");
-      const cancelBtn = e.target.closest("[data-cancel]");
-      const photoBtn = e.target.closest("[data-del-photo]");
-
-      if (cancelBtn) { editingId = null; render(); return; }
-      if (editBtn) { editingId = editBtn.getAttribute("data-edit"); render(); return; }
-
-      if (saveBtn) {
-        const pin = askPassword("Mot de passe pour enregistrer :");
-        if (!pin) return;
-        const id = saveBtn.getAttribute("data-save");
-        statusEl.textContent = "Enregistrement…";
-        const res = await api({
-          action: "update",
-          token: pin,
-          id,
-          titre: document.getElementById("e-titre").value,
-          statut: document.getElementById("e-statut").value,
-          prioritaire: document.getElementById("e-prio").value,
-          notes: document.getElementById("e-notes").value,
-          tarif: document.getElementById("e-tarif").value,
-          personnes: document.getElementById("e-pers").value,
-        });
-        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
-        await loadTravaux();
-        return;
-      }
-
-      if (delBtn) {
-        const pin = askPassword("Mot de passe pour supprimer :");
-        if (!pin) return;
-        if (!confirm("Supprimer ce travail ?")) return;
-        const res = await api({
-          action: "delete",
-          token: pin,
-          id: delBtn.getAttribute("data-delete"),
-        });
-        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
-        await loadTravaux();
-        return;
-      }
-
-      if (photoBtn) {
-        const pin = askPassword("Mot de passe pour retirer la photo :");
-        if (!pin) return;
-        if (!confirm("Retirer cette photo ?")) return;
-        const res = await api({
-          action: "removePhoto",
-          token: pin,
-          id: photoBtn.getAttribute("data-del-photo"),
-          photoUrl: photoBtn.getAttribute("data-photo-url"),
-        });
-        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
-        await loadTravaux();
-      }
-    });
+    document.getElementById("btn-add").onclick = () => { mode = "add"; render(); };
+    document.getElementById("btn-refresh").onclick = loadTravaux;
 
     document.getElementById("filters").addEventListener("click", (e) => {
       const btn = e.target.closest(".chip");
@@ -466,7 +377,72 @@
       render();
     });
 
-    document.getElementById("btn-refresh").onclick = loadTravaux;
+    listEl.addEventListener("click", async (e) => {
+      if (e.target.closest("[data-cancel]")) { mode = null; render(); return; }
+
+      const editBtn = e.target.closest("[data-edit]");
+      if (editBtn) { mode = editBtn.getAttribute("data-edit"); render(); return; }
+
+      if (e.target.closest("[data-save-add]")) {
+        const pin = askPassword("Mot de passe pour ajouter :");
+        if (!pin) return;
+        const f = readForm();
+        if (!f.titre) return alert("Indiquez un titre");
+        statusEl.textContent = "Envoi (photos éventuelles)…";
+        try {
+          const photos = await filesToPhotos(document.getElementById("f-photos").files);
+          await apiPost(Object.assign({ action: "add", token: pin, photos }, f));
+          // petite pause puis refresh (le POST Apps Script peut être un peu lent)
+          setTimeout(loadTravaux, 800);
+        } catch (err) {
+          alert("Erreur d’envoi. Réessayez avec moins/plus petites photos.");
+          statusEl.textContent = "Erreur";
+        }
+        return;
+      }
+
+      const saveEdit = e.target.closest("[data-save-edit]");
+      if (saveEdit) {
+        const pin = askPassword("Mot de passe pour enregistrer :");
+        if (!pin) return;
+        const f = readForm();
+        const res = await apiGet(Object.assign({
+          action: "update", token: pin, id: saveEdit.getAttribute("data-save-edit")
+        }, f));
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await loadTravaux();
+        return;
+      }
+
+      const delBtn = e.target.closest("[data-delete]");
+      if (delBtn) {
+        const pin = askPassword("Mot de passe pour supprimer :");
+        if (!pin) return;
+        if (!confirm("Supprimer ce travail ?")) return;
+        const res = await apiGet({
+          action: "delete", token: pin, id: delBtn.getAttribute("data-delete")
+        });
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await loadTravaux();
+        return;
+      }
+
+      const photoBtn = e.target.closest("[data-del-photo]");
+      if (photoBtn) {
+        const pin = askPassword("Mot de passe pour retirer la photo :");
+        if (!pin) return;
+        if (!confirm("Retirer cette photo ?")) return;
+        const res = await apiGet({
+          action: "removePhoto",
+          token: pin,
+          id: photoBtn.getAttribute("data-del-photo"),
+          photoUrl: photoBtn.getAttribute("data-photo-url"),
+        });
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await loadTravaux();
+      }
+    });
+
     loadTravaux();
   </script>
 </body>
