@@ -236,7 +236,7 @@
 
   <script>
     // ========== À COMPLÉTER ==========
-    const API_URL = "https://script.google.com/macros/s/VOTRE_URL_EXEC/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec";
     const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdxioUmnwt7ddwgv5pkLyb3HpkCAzf4WhoIR-RktOOsO8rFsw/viewform";
     // ================================
 
@@ -389,9 +389,7 @@
       };
 
       const script = document.createElement("script");
-      script.src = https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec
- + (https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec
-.includes("?") ? "&" : "?") + "callback=__travauxCallback";
+      script.src = API_URL + (API_URL.includes("?") ? "&" : "?") + "callback=__travauxCallback";
       script.onerror = function () {
         statusEl.textContent = "Erreur de chargement";
         listEl.innerHTML =
