@@ -250,15 +250,6 @@
     let allItems = [];
     let currentFilter = "tous";
 
-    function pick(row, names) {
-      const keys = Object.keys(row);
-      for (const name of names) {
-        const found = keys.find((k) => k.toLowerCase().includes(name.toLowerCase()));
-        if (found && row[found] !== "" && row[found] != null) return row[found];
-      }
-      return "";
-    }
-
     function formatDate(value) {
       if (!value) return "—";
       const d = new Date(value);
@@ -306,18 +297,18 @@
         .map(toImageUrl);
     }
 
-    function normalize(row) {
-      return {
-        titre: pick(row, ["titre", "title", "nom"]),
-        statut: pick(row, ["statut", "status", "état", "etat"]) || "À faire",
-        prioritaire: isPriority(pick(row, ["prioritaire", "priority", "prio"])),
-        date: pick(row, ["horodatage", "timestamp", "date"]),
-        notes: pick(row, ["notes", "note", "description", "détail", "detail"]),
-        tarif: pick(row, ["tarif", "prix", "budget", "coût", "cout"]),
-        personnes: pick(row, ["personnes", "personne", "responsable", "assign"]),
-        photos: parsePhotos(pick(row, ["photos", "photo", "image", "fichier", "file"])),
-      };
-    }
+function normalize(row) {
+  return {
+    titre: row.titre || "",
+    statut: row.statut || "À faire",
+    prioritaire: String(row.prioritaire || "").toLowerCase() === "oui",
+    date: row.horodatage || "",
+    notes: row.notes || "",
+    tarif: row.tarif || "",
+    personnes: row.personnes || "",
+    photos: parsePhotos(row.photos || ""),
+  };
+}
 
     function render() {
       const items = allItems.filter((item) => {
