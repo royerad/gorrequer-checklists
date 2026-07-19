@@ -13,7 +13,6 @@
       --line: #e4e0da;
       --priority: #8a3b2c;
       --ok: #2f5d50;
-      --danger: #8a3b2c;
     }
     * { box-sizing: border-box; }
     body {
@@ -33,15 +32,20 @@
       background: var(--card); color: var(--text); font-size: 0.95rem;
       text-decoration: none; cursor: pointer;
     }
-    .btn-primary { background: var(--ok); border-color: var(--ok); color: #fff; flex: 1; font-weight: 600; }
-    .btn-danger { background: #fff; border-color: #e7b3a6; color: var(--danger); }
+    .btn-primary {
+      background: var(--ok); border-color: var(--ok); color: #fff;
+      flex: 1; font-weight: 600;
+    }
+    .btn-danger { border-color: #e7b3a6; color: var(--priority); }
     .btn-small { padding: 0.45rem 0.65rem; font-size: 0.85rem; }
     .filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
     .chip {
       border: 1px solid var(--line); background: var(--card); border-radius: 999px;
       padding: 0.35rem 0.7rem; font-size: 0.85rem; cursor: pointer;
     }
-    .chip.active { background: #e8efeC; border-color: #b7cfc6; color: var(--ok); font-weight: 600; }
+    .chip.active {
+      background: #e8efeC; border-color: #b7cfc6; color: var(--ok); font-weight: 600;
+    }
     .status { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.9rem; }
     details.item {
       background: var(--card); border: 1px solid var(--line);
@@ -54,7 +58,10 @@
     }
     summary::-webkit-details-marker { display: none; }
     .title { font-weight: 700; line-height: 1.3; }
-    .meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+    .meta {
+      grid-column: 1 / -1; display: flex; flex-wrap: wrap;
+      gap: 0.35rem; align-items: center;
+    }
     .tag {
       display: inline-block; font-size: 0.72rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.03em;
@@ -79,38 +86,32 @@
       border-radius: 8px; font: inherit; background: #fff;
     }
     textarea { min-height: 90px; resize: vertical; }
-    .photos { display: grid; gap: 0.5rem; margin-top: 0.35rem; }
+    .photos { display: grid; gap: 0.5rem; }
     .photo-wrap { position: relative; }
-    .photos img { width: 100%; height: auto; border-radius: 8px; display: block; background: #eee; }
+    .photos img {
+      width: 100%; height: auto; border-radius: 8px; display: block; background: #eee;
+    }
     .photo-del {
-      position: absolute; top: 0.4rem; right: 0.4rem;
-      border: none; border-radius: 999px; background: rgba(0,0,0,.65);
-      color: #fff; width: 2rem; height: 2rem; cursor: pointer; font-size: 1rem;
+      position: absolute; top: 0.4rem; right: 0.4rem; border: none; border-radius: 999px;
+      background: rgba(0,0,0,.65); color: #fff; width: 2rem; height: 2rem;
+      cursor: pointer; font-size: 1rem;
     }
     .actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
     .empty, .error {
-      background: var(--card); border: 1px dashed var(--line);
-      border-radius: 12px; padding: 1rem; color: var(--muted); text-align: center;
+      background: var(--card); border: 1px dashed var(--line); border-radius: 12px;
+      padding: 1rem; color: var(--muted); text-align: center;
     }
     .error { border-color: #e7b3a6; color: var(--priority); }
-    .pin {
-      display: flex; gap: 0.4rem; margin-bottom: 0.75rem; align-items: center;
-    }
-    .pin input { flex: 1; }
+    .hint { font-size: 0.8rem; color: #888; margin: 0.5rem 0 0; }
   </style>
 </head>
 <body>
   <h1>Travaux</h1>
-  <p class="subtitle">Suivi des travaux — ajout, modification, suppression</p>
+  <p class="subtitle">À faire, en cours ou terminés</p>
 
   <div class="top">
     <a class="btn btn-primary" id="btn-add" target="_blank" rel="noopener">+ Ajouter un travail</a>
     <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
-  </div>
-
-  <div class="pin">
-    <input id="pin" type="password" placeholder="Code modification (PIN)" />
-    <button class="btn btn-small" type="button" id="btn-save-pin">OK</button>
   </div>
 
   <div class="filters" id="filters">
@@ -124,8 +125,10 @@
   <div id="list"></div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec?";
+    // ===== À COMPLÉTER =====
+    const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec";
     const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdxioUmnwt7ddwgv5pkLyb3HpkCAzf4WhoIR-RktOOsO8rFsw/viewform";
+    // =======================
 
     const listEl = document.getElementById("list");
     const statusEl = document.getElementById("status");
@@ -135,19 +138,21 @@
     let currentFilter = "tous";
     let editingId = null;
 
-    const pinInput = document.getElementById("pin");
-    pinInput.value = localStorage.getItem("travaux-pin") || "";
-    document.getElementById("btn-save-pin").onclick = () => {
-      localStorage.setItem("travaux-pin", pinInput.value.trim());
-      alert("Code enregistré sur cet appareil");
-    };
-    function token() {
-      return (pinInput.value || localStorage.getItem("travaux-pin") || "").trim();
+    function askPassword(msg) {
+      const v = prompt(msg);
+      if (v === null) return null;
+      const t = v.trim();
+      if (!t) {
+        alert("Mot de passe vide");
+        return null;
+      }
+      return t;
     }
 
-    function apiJsonp(params) {
+    function api(params) {
       return new Promise((resolve, reject) => {
-        const cb = "__cb_" + Date.now() + "_" + Math.floor(Math.random() * 9999);
+        const cb = "__cb_" + Date.now();
+        const script = document.createElement("script");
         window[cb] = (data) => {
           resolve(data);
           delete window[cb];
@@ -155,12 +160,8 @@
         };
         const q = new URLSearchParams(params);
         q.set("callback", cb);
-        const script = document.createElement("script");
         script.src = API_URL + "?" + q.toString();
-        script.onerror = () => {
-          reject(new Error("API"));
-          delete window[cb];
-        };
+        script.onerror = () => reject(new Error("API"));
         document.body.appendChild(script);
       });
     }
@@ -169,7 +170,9 @@
       if (!value) return "—";
       const d = new Date(value);
       if (Number.isNaN(d.getTime())) return String(value);
-      return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
+      return d.toLocaleDateString("fr-FR", {
+        day: "2-digit", month: "short", year: "numeric"
+      });
     }
 
     function isPriority(value) {
@@ -184,54 +187,38 @@
       return "todo";
     }
 
-    function extractDriveId(url) {
+    function driveId(url) {
       const s = String(url);
-      return (s.match(/\/d\/([^/]+)/) || [])[1] || (s.match(/[?&]id=([^&]+)/) || [])[1] || null;
+      return (s.match(/\/d\/([^/]+)/) || [])[1] ||
+             (s.match(/[?&]id=([^&]+)/) || [])[1] || null;
     }
 
-    function toImageUrl(url) {
-      const id = extractDriveId(url);
+    function imgUrl(url) {
+      const id = driveId(url);
       return id ? "https://drive.google.com/thumbnail?id=" + id + "&sz=w1200" : url;
     }
 
     function parsePhotos(value) {
       if (!value) return [];
-      if (Array.isArray(value)) return value.map(toImageUrl);
-      return String(value).split(/[\s,;]+/).map((x) => x.trim()).filter((x) => /^https?:\/\//i.test(x));
+      return String(value)
+        .split(/[\s,;]+/)
+        .map((x) => x.trim())
+        .filter((x) => /^https?:\/\//i.test(x));
     }
 
     function normalize(row) {
-      const photosRaw = parsePhotos(row.photos || "");
-      return {
-        id: row.id || row.horodatage,
-        titre: row.titre || "",
-        statut: row.statut || "À faire",
-        prioritaireRaw: row.prioritaire || "Non",
-        prioritaire: isPriority(row.prioritaire),
-        date: row.horodatage || "",
-        notes: row.notes || "",
-        tarif: row.tarif || "",
-        personnes: row.personnes || "",
-        photos: photosRaw,
-        photosOriginal: photosRaw.map((u, i) => parsePhotos(row.photos || "")[i] || u),
-      };
-    }
-
-    // Conserve les URLs Drive d'origine pour la suppression
-    function normalizeBetter(row) {
       const original = parsePhotos(row.photos || "");
       return {
         id: row.id || row.horodatage,
         titre: row.titre || "",
         statut: row.statut || "À faire",
-        prioritaireRaw: row.prioritaire || "Non",
         prioritaire: isPriority(row.prioritaire),
         date: row.horodatage || "",
         notes: row.notes || "",
         tarif: row.tarif || "",
         personnes: row.personnes || "",
         photosOriginal: original,
-        photos: original.map(toImageUrl),
+        photos: original.map(imgUrl),
       };
     }
 
@@ -251,10 +238,10 @@
 
       statusEl.textContent = items.length
         ? items.length + " travail" + (items.length > 1 ? "x" : "")
-        : "Aucun travail pour ce filtre";
+        : "Aucun travail";
 
       if (!items.length) {
-        listEl.innerHTML = '<div class="empty">Aucun travail.</div>';
+        listEl.innerHTML = '<div class="empty">Aucun travail pour le moment.</div>';
         return;
       }
 
@@ -263,11 +250,12 @@
           return `
             <details class="item ${item.prioritaire ? "prio" : ""}" open>
               <summary>
-                <div class="title">Modifier — ${escapeHtml(item.titre)}</div>
+                <div class="title">Modification</div>
                 <span class="chevron">›</span>
               </summary>
               <div class="content">
-                <div class="field"><label>Titre</label><input id="e-titre" value="${escapeHtml(item.titre)}" /></div>
+                <div class="field"><label>Titre</label>
+                  <input id="e-titre" value="${escapeHtml(item.titre)}" /></div>
                 <div class="field"><label>Statut</label>
                   <select id="e-statut">
                     <option ${item.statut === "À faire" ? "selected" : ""}>À faire</option>
@@ -281,9 +269,12 @@
                     <option value="Urgent" ${item.prioritaire ? "selected" : ""}>Urgent</option>
                   </select>
                 </div>
-                <div class="field"><label>Notes</label><textarea id="e-notes">${escapeHtml(item.notes)}</textarea></div>
-                <div class="field"><label>Tarif</label><input id="e-tarif" value="${escapeHtml(item.tarif)}" /></div>
-                <div class="field"><label>Responsable</label><input id="e-pers" value="${escapeHtml(item.personnes)}" /></div>
+                <div class="field"><label>Notes</label>
+                  <textarea id="e-notes">${escapeHtml(item.notes)}</textarea></div>
+                <div class="field"><label>Tarif</label>
+                  <input id="e-tarif" value="${escapeHtml(item.tarif)}" /></div>
+                <div class="field"><label>Responsable</label>
+                  <input id="e-pers" value="${escapeHtml(item.personnes)}" /></div>
                 <div class="actions">
                   <button class="btn btn-primary btn-small" type="button" data-save="${escapeHtml(item.id)}">Enregistrer</button>
                   <button class="btn btn-small" type="button" data-cancel>Annuler</button>
@@ -293,15 +284,15 @@
         }
 
         const photosHtml = item.photos.length
-          ? `<div class="field"><label>Photos</label><div class="photos">${item.photos
-              .map((src, idx) => `
+          ? `<div class="field"><label>Photos</label><div class="photos">${
+              item.photos.map((src, i) => `
                 <div class="photo-wrap">
                   <img src="${src}" alt="Photo" loading="lazy" />
-                  <button class="photo-del" type="button" title="Supprimer la photo"
+                  <button class="photo-del" type="button"
                     data-del-photo="${escapeHtml(item.id)}"
-                    data-photo-url="${escapeHtml(item.photosOriginal[idx])}">×</button>
-                </div>`)
-              .join("")}</div></div>`
+                    data-photo-url="${escapeHtml(item.photosOriginal[i])}">×</button>
+                </div>`).join("")
+            }</div></div>`
           : `<div class="field"><label>Photos</label><p>—</p></div>`;
 
         return `
@@ -324,7 +315,7 @@
                 <button class="btn btn-small" type="button" data-edit="${escapeHtml(item.id)}">Modifier</button>
                 <button class="btn btn-small btn-danger" type="button" data-delete="${escapeHtml(item.id)}">Supprimer</button>
               </div>
-              <p style="font-size:0.8rem;color:#888;margin:.5rem 0 0">Pour ajouter des photos : utilisez « Ajouter un travail » ou recréez l’entrée. La suppression retire la photo de la fiche.</p>
+              <p class="hint">Pour ajouter des photos, créez un nouveau travail via le bouton +.</p>
             </div>
           </details>`;
       }).join("");
@@ -333,8 +324,8 @@
     async function loadTravaux() {
       statusEl.textContent = "Chargement…";
       try {
-        const data = await apiJsonp({ action: "list" });
-        allItems = (Array.isArray(data) ? data : []).map(normalizeBetter);
+        const data = await api({ action: "list" });
+        allItems = (Array.isArray(data) ? data : []).map(normalize);
         editingId = null;
         render();
       } catch (e) {
@@ -363,12 +354,13 @@
       }
 
       if (saveBtn) {
-        if (!token()) return alert("Entrez le code PIN en haut de page");
+        const pin = askPassword("Mot de passe pour enregistrer :");
+        if (!pin) return;
         const id = saveBtn.getAttribute("data-save");
         statusEl.textContent = "Enregistrement…";
-        const res = await apiJsonp({
+        const res = await api({
           action: "update",
-          token: token(),
+          token: pin,
           id,
           titre: document.getElementById("e-titre").value,
           statut: document.getElementById("e-statut").value,
@@ -377,33 +369,36 @@
           tarif: document.getElementById("e-tarif").value,
           personnes: document.getElementById("e-pers").value,
         });
-        if (!res.ok) return alert(res.error || "Erreur");
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await loadTravaux();
         return;
       }
 
       if (delBtn) {
-        if (!token()) return alert("Entrez le code PIN en haut de page");
+        const pin = askPassword("Mot de passe pour supprimer :");
+        if (!pin) return;
         if (!confirm("Supprimer ce travail ?")) return;
-        const id = delBtn.getAttribute("data-delete");
-        const res = await apiJsonp({ action: "delete", token: token(), id });
-        if (!res.ok) return alert(res.error || "Erreur");
+        const res = await api({
+          action: "delete",
+          token: pin,
+          id: delBtn.getAttribute("data-delete"),
+        });
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await loadTravaux();
         return;
       }
 
       if (photoBtn) {
-        if (!token()) return alert("Entrez le code PIN en haut de page");
-        if (!confirm("Retirer cette photo de la fiche ?")) return;
-        const id = photoBtn.getAttribute("data-del-photo");
-        const photoUrl = photoBtn.getAttribute("data-photo-url");
-        const res = await apiJsonp({
+        const pin = askPassword("Mot de passe pour retirer la photo :");
+        if (!pin) return;
+        if (!confirm("Retirer cette photo ?")) return;
+        const res = await api({
           action: "removePhoto",
-          token: token(),
-          id,
-          photoUrl,
+          token: pin,
+          id: photoBtn.getAttribute("data-del-photo"),
+          photoUrl: photoBtn.getAttribute("data-photo-url"),
         });
-        if (!res.ok) return alert(res.error || "Erreur");
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await loadTravaux();
       }
     });
