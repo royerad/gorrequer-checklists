@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carnet d'adresses</title>
+  <style>
+    :root {
+      --bg: #f6f4f1; --card: #fff; --text: #1c1c1c; --muted: #666;
+      --line: #e4e0da; --ok: #2f5d50; --priority: #8a3b2c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 520px; margin: 0 auto; padding: 1rem;
+      background: var(--bg); color: var(--text);
+    }
+    h1 { margin: 0 0 0.35rem; font-size: 1.5rem; }
+    .subtitle { margin: 0 0 1rem; color: var(--muted); }
+    .top { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 0.9rem; border-radius: 10px; border: 1px solid var(--line);
+      background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer;
+    }
+    .btn-primary { background: var(--ok); border-color: var(--ok); color: #fff; flex: 1; font-weight: 600; }
+    .btn-danger { border-color: #e7b3a6; color: var(--priority); }
+    .btn-small { padding: 0.45rem 0.65rem; font-size: 0.85rem; }
+    #search {
+      width: 100%; padding: 0.7rem 0.85rem; border: 1px solid var(--line);
+      border-radius: 10px; font: inherit; margin-bottom: 0.75rem; background: #fff;
+    }
+    .filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+    .chip {
+      border: 1px solid var(--line); background: var(--card); border-radius: 999px;
+      padding: 0.35rem 0.7rem; font-size: 0.85rem; cursor: pointer;
+    }
+    .chip.active { background: #e8efeC; border-color: #b7cfc6; color: var(--ok); font-weight: 600; }
+    .status { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.9rem; }
+    details.item {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 12px; margin: 0.5rem 0; overflow: hidden;
+    }
+    summary {
+      list-style: none; display: grid; grid-template-columns: 1fr auto;
+      gap: 0.25rem 0.75rem; padding: 0.85rem 0.95rem; cursor: pointer;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .name { font-weight: 700; }
+    .role { color: var(--muted); font-size: 0.9rem; grid-column: 1 / -1; }
+    .chevron { color: var(--muted); transition: transform .15s ease; }
+    details[open] .chevron { transform: rotate(90deg); }
+    .content { padding: 0.75rem 0.95rem 1rem; border-top: 1px solid var(--line); }
+    .field { margin: 0.55rem 0; }
+    .field label {
+      display: block; font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--muted); margin-bottom: 0.2rem;
+    }
+    .field p { margin: 0; }
+    a.contact-link { color: var(--ok); font-weight: 600; text-decoration: none; }
+    input, textarea {
+      width: 100%; padding: 0.55rem 0.65rem; border: 1px solid var(--line);
+      border-radius: 8px; font: inherit; background: #fff;
+    }
+    textarea { min-height: 70px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .empty, .error {
+      background: var(--card); border: 1px dashed var(--line); border-radius: 12px;
+      padding: 1rem; text-align: center; color: var(--muted);
+    }
+    .error { color: var(--priority); border-color: #e7b3a6; }
+    .panel {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 0.85rem; margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Carnet d'adresses</h1>
+  <p class="subtitle">Contacts utiles — tri alphabétique</p>
+
+  <div class="top">
+    <button class="btn btn-primary" type="button" id="btn-add">+ Ajouter</button>
+    <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
+  </div>
+
+  <input id="search" type="search" placeholder="Rechercher un nom, métier, téléphone…" />
+
+  <div class="filters" id="filters"></div>
+  <p class="status" id="status">Chargement…</p>
+  <div id="list"></div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzNoaq_oXzb5go5J4DNFe5bAOH34YCD1ZEPp-BXkpvhbfXQyOhLyvFat2jp861AYBBT1Q/exec";
+
+    const listEl = document.getElementById("list");
+    const statusEl = document.getElementById("status");
+    const filtersEl = document.getElementById("filters");
+    const searchEl = document.getElementById("search");
+
+    let allItems = [];
+    let roleFilter = "tous";
+    let query = "";
+    let mode = null; // null | 'add' | id en édition
+
+    function askPassword(msg) {
+      const v = prompt(msg);
+      if (v === null) return null;
+      const t = v.trim();
+      if (!t) { alert("Mot de passe vide"); return null; }
+      return t;
+    }
+
+    function api(params) {
+      return new Promise((resolve, reject) => {
+        const cb = "__cb_" + Date.now();
+        const script = document.createElement("script");
+        window[cb] = (data) => { resolve(data); delete window[cb]; script.remove(); };
+        const q = new URLSearchParams(params);
+        q.set("callback", cb);
+        script.src = API_URL + "?" + q.toString();
+        script.onerror = () => reject(new Error("API"));
+        document.body.appendChild(script);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+    }
+
+    function telHref(tel) {
+      const cleaned = String(tel).replace(/[^\d+]/g, "");
+      return cleaned ? "tel:" + cleaned : "";
+    }
+
+    function roles() {
+      const set = new Set();
+      allItems.forEach((c) => { if (c.role) set.add(c.role); });
+      return Array.from(set).sort((a, b) => a.localeCompare(b, "fr"));
+    }
+
+    function filtered() {
+      const q = query.trim().toLowerCase();
+      return allItems.filter((c) => {
+        if (roleFilter !== "tous" && c.role !== roleFilter) return false;
+        if (!q) return true;
+        const blob = [c.nom, c.prenom, c.role, c.telephone, c.email, c.note].join(" ").toLowerCase();
+        return blob.includes(q);
+      });
+    }
+
+    function renderFilters() {
+      const list = ["tous"].concat(roles());
+      filtersEl.innerHTML = list.map((r) => {
+        const label = r === "tous" ? "Tous" : r;
+        const active = roleFilter === r ? "active" : "";
+        return `<button class="chip ${active}" type="button" data-role="${escapeHtml(r)}">${escapeHtml(label)}</button>`;
+      }).join("");
+    }
+
+    function formFields(c) {
+      c = c || { nom: "", prenom: "", role: "", telephone: "", email: "", note: "" };
+      return `
+        <div class="field"><label>Nom</label><input id="f-nom" value="${escapeHtml(c.nom)}" /></div>
+        <div class="field"><label>Prénom</label><input id="f-prenom" value="${escapeHtml(c.prenom)}" /></div>
+        <div class="field"><label>Rôle / métier</label><input id="f-role" value="${escapeHtml(c.role)}" placeholder="Plombier, Électricien…" /></div>
+        <div class="field"><label>Téléphone</label><input id="f-tel" value="${escapeHtml(c.telephone)}" /></div>
+        <div class="field"><label>Email</label><input id="f-email" value="${escapeHtml(c.email)}" /></div>
+        <div class="field"><label>Note</label><textarea id="f-note">${escapeHtml(c.note)}</textarea></div>`;
+    }
+
+    function readForm() {
+      return {
+        nom: document.getElementById("f-nom").value.trim(),
+        prenom: document.getElementById("f-prenom").value.trim(),
+        role: document.getElementById("f-role").value.trim(),
+        telephone: document.getElementById("f-tel").value.trim(),
+        email: document.getElementById("f-email").value.trim(),
+        note: document.getElementById("f-note").value.trim(),
+      };
+    }
+
+    function render() {
+      renderFilters();
+      const items = filtered();
+      statusEl.textContent = items.length + " contact" + (items.length > 1 ? "s" : "");
+
+      let html = "";
+
+      if (mode === "add") {
+        html += `<div class="panel">
+          <strong>Nouveau contact</strong>
+          ${formFields()}
+          <div class="actions">
+            <button class="btn btn-primary btn-small" type="button" data-save-add>Enregistrer</button>
+            <button class="btn btn-small" type="button" data-cancel>Annuler</button>
+          </div>
+        </div>`;
+      }
+
+      if (!items.length && mode !== "add") {
+        html += '<div class="empty">Aucun contact.</div>';
+        listEl.innerHTML = html;
+        return;
+      }
+
+      html += items.map((c) => {
+        if (mode === c.id) {
+          return `<details class="item" open>
+            <summary><div class="name">Modification</div><span class="chevron">›</span></summary>
+            <div class="content">
+              ${formFields(c)}
+              <div class="actions">
+                <button class="btn btn-primary btn-small" type="button" data-save-edit="${escapeHtml(c.id)}">Enregistrer</button>
+                <button class="btn btn-small" type="button" data-cancel>Annuler</button>
+              </div>
+            </div>
+          </details>`;
+        }
+
+        const tel = telHref(c.telephone);
+        const mail = c.email ? "mailto:" + c.email : "";
+        return `<details class="item">
+          <summary>
+            <div class="name">${escapeHtml((c.prenom + " " + c.nom).trim() || c.nom || c.prenom)}</div>
+            <span class="chevron">›</span>
+            <div class="role">${escapeHtml(c.role || "—")}</div>
+          </summary>
+          <div class="content">
+            <div class="field"><label>Téléphone</label>
+              <p>${tel ? `<a class="contact-link" href="${tel}">${escapeHtml(c.telephone)}</a>` : "—"}</p>
+            </div>
+            <div class="field"><label>Email</label>
+              <p>${mail ? `<a class="contact-link" href="${mail}">${escapeHtml(c.email)}</a>` : "—"}</p>
+            </div>
+            <div class="field"><label>Note</label><p>${escapeHtml(c.note || "—")}</p></div>
+            <div class="actions">
+              <button class="btn btn-small" type="button" data-edit="${escapeHtml(c.id)}">Modifier</button>
+              <button class="btn btn-small btn-danger" type="button" data-delete="${escapeHtml(c.id)}">Supprimer</button>
+            </div>
+          </div>
+        </details>`;
+      }).join("");
+
+      listEl.innerHTML = html;
+    }
+
+    async function load() {
+      statusEl.textContent = "Chargement…";
+      try {
+        const data = await api({ action: "list" });
+        allItems = Array.isArray(data) ? data : [];
+        mode = null;
+        render();
+      } catch (e) {
+        statusEl.textContent = "Erreur";
+        listEl.innerHTML = '<div class="error">Impossible de charger les contacts.</div>';
+      }
+    }
+
+    filtersEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-role]");
+      if (!btn) return;
+      roleFilter = btn.getAttribute("data-role");
+      render();
+    });
+
+    searchEl.addEventListener("input", () => {
+      query = searchEl.value;
+      render();
+    });
+
+    document.getElementById("btn-add").onclick = () => { mode = "add"; render(); };
+    document.getElementById("btn-refresh").onclick = load;
+
+    listEl.addEventListener("click", async (e) => {
+      if (e.target.closest("[data-cancel]")) { mode = null; render(); return; }
+
+      const editBtn = e.target.closest("[data-edit]");
+      if (editBtn) { mode = editBtn.getAttribute("data-edit"); render(); return; }
+
+      if (e.target.closest("[data-save-add]")) {
+        const pin = askPassword("Mot de passe pour ajouter :");
+        if (!pin) return;
+        const f = readForm();
+        if (!f.nom && !f.prenom) return alert("Indiquez au moins un nom ou prénom");
+        const res = await api(Object.assign({ action: "add", token: pin }, f));
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await load();
+        return;
+      }
+
+      const saveEdit = e.target.closest("[data-save-edit]");
+      if (saveEdit) {
+        const pin = askPassword("Mot de passe pour enregistrer :");
+        if (!pin) return;
+        const f = readForm();
+        const res = await api(Object.assign({
+          action: "update", token: pin, id: saveEdit.getAttribute("data-save-edit")
+        }, f));
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await load();
+        return;
+      }
+
+      const delBtn = e.target.closest("[data-delete]");
+      if (delBtn) {
+        const pin = askPassword("Mot de passe pour supprimer :");
+        if (!pin) return;
+        if (!confirm("Supprimer ce contact ?")) return;
+        const res = await api({
+          action: "delete", token: pin, id: delBtn.getAttribute("data-delete")
+        });
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await load();
+      }
+    });
+
+    load();
+  </script>
+</body>
+</html>
