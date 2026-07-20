@@ -64,11 +64,15 @@
       letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.25rem;
     }
     .field p { margin: 0; white-space: pre-wrap; }
+    .field .hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
     input, select, textarea {
       width: 100%; padding: 0.55rem 0.65rem; border: 1px solid var(--line);
       border-radius: 8px; font: inherit; background: #fff;
     }
     textarea { min-height: 90px; }
+    .price-row { display: flex; gap: 0.5rem; }
+    .price-row input { flex: 2; min-width: 0; }
+    .price-row select { flex: 1; min-width: 0; }
     .photos { display: grid; gap: 0.5rem; }
     .photo-wrap { position: relative; }
     .photos img { width: 100%; border-radius: 8px; display: block; background: #eee; }
@@ -224,7 +228,39 @@
         .replaceAll('"', "&quot;");
     }
 
+    function parseTarif(value) {
+      if (!value) return { amount: "", currency: "EUR" };
+      const s = String(value).trim();
+      const m = s.match(/^([\d\s.,]+)\s*(EUR|USD|CHF|€|\$)?$/i);
+      if (m) {
+        let cur = (m[2] || "EUR").toUpperCase();
+        if (cur === "€") cur = "EUR";
+        if (cur === "$") cur = "USD";
+        return { amount: m[1].replace(/\s/g, "").replace(",", "."), currency: cur };
+      }
+      return { amount: "", currency: "EUR", legacy: s };
+    }
+
+    function buildTarifFromForm() {
+      const raw = document.getElementById("f-tarif").value.trim();
+      if (!raw) return "";
+      const n = parseFloat(raw.replace(",", "."));
+      if (isNaN(n) || n < 0) return null;
+      const cur = document.getElementById("f-devise").value;
+      const amount = (Math.round(n * 100) / 100).toString().replace(".", ",");
+      return amount + " " + cur;
+    }
+
+    function formatTarifDisplay(value) {
+      if (!value) return "—";
+      const m = String(value).trim().match(/^([\d.,]+)\s*(EUR|USD|CHF)$/i);
+      if (!m) return value;
+      const sym = { EUR: "€", USD: "$", CHF: "CHF" }[m[2].toUpperCase()] || m[2];
+      return m[1] + " " + sym;
+    }
+
     function formFields(item) {
+      const t = parseTarif(item.tarif);
       return `
         <div class="field"><label>Titre</label><input id="f-titre" value="${escapeHtml(item.titre)}" /></div>
         <div class="field"><label>Statut</label>
@@ -241,7 +277,18 @@
           </select>
         </div>
         <div class="field"><label>Notes</label><textarea id="f-notes">${escapeHtml(item.notes || "")}</textarea></div>
-        <div class="field"><label>Tarif</label><input id="f-tarif" value="${escapeHtml(item.tarif || "")}" /></div>
+        <div class="field"><label>Tarif</label>
+          <div class="price-row">
+            <input id="f-tarif" type="number" inputmode="decimal" min="0" step="0.01"
+              value="${escapeHtml(t.amount)}" placeholder="0" />
+            <select id="f-devise">
+              <option value="EUR" ${t.currency === "EUR" ? "selected" : ""}>€ EUR</option>
+              <option value="USD" ${t.currency === "USD" ? "selected" : ""}>$ USD</option>
+              <option value="CHF" ${t.currency === "CHF" ? "selected" : ""}>CHF</option>
+            </select>
+          </div>
+          ${t.legacy ? `<p class="hint">Ancien format : ${escapeHtml(t.legacy)}</p>` : ""}
+        </div>
         <div class="field"><label>Responsable</label><input id="f-pers" value="${escapeHtml(item.personnes || "")}" /></div>
       `;
     }
@@ -297,7 +344,7 @@
           </summary>
           <div class="content">
             <div class="field"><label>Notes</label><p>${escapeHtml(item.notes || "—")}</p></div>
-            <div class="field"><label>Tarif</label><p>${escapeHtml(item.tarif || "—")}</p></div>
+            <div class="field"><label>Tarif</label><p>${escapeHtml(formatTarifDisplay(item.tarif))}</p></div>
             <div class="field"><label>Responsable</label><p>${escapeHtml(item.personnes || "—")}</p></div>
             ${photosHtml}
             <div class="actions">
@@ -359,6 +406,8 @@
       if (saveBtn) {
         const pin = askPassword("Mot de passe pour enregistrer :");
         if (!pin) return;
+        const tarif = buildTarifFromForm();
+        if (tarif === null) return alert("Tarif invalide : chiffres uniquement");
         const res = await apiGet({
           action: "update",
           token: pin,
@@ -367,7 +416,7 @@
           statut: document.getElementById("f-statut").value,
           prioritaire: document.getElementById("f-prio").value,
           notes: document.getElementById("f-notes").value,
-          tarif: document.getElementById("f-tarif").value,
+          tarif: tarif,
           personnes: document.getElementById("f-pers").value,
         });
         if (!res || !res.ok) return alert((res && res.error) || "Erreur");
@@ -408,7 +457,6 @@
 
     window.addEventListener("message", function (event) {
       if (!event.data || event.data.type !== "travaux-added" || !event.data.ok) return;
-
       closeAddPanel();
       loadTravaux();
     });
