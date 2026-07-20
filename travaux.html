@@ -383,15 +383,20 @@ function escapeHtml(str) {
       }
     });
 
-    window.addEventListener("message", function (event) {
-  if (!event.data || event.data.type !== "travaux-added") return;
+ window.addEventListener("message", function (event) {
+  if (!event.data || event.data.type !== "travaux-added" || !event.data.ok) return;
 
-  // Fermer le panneau d'ajout
   addPanel.hidden = true;
   addFrame.src = "about:blank";
 
-  // Rafraîchir tout de suite
-  loadTravaux();
+  if (event.data.item) {
+    allItems.unshift(normalize(event.data.item));
+    render();
+    statusEl.textContent = "Travail ajouté";
+    setTimeout(loadTravaux, 5000);
+  } else {
+    loadTravaux();
+  }
 });
 
     loadTravaux();
