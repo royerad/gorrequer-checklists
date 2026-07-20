@@ -101,7 +101,7 @@
 
   <div class="panel" id="add-panel" hidden>
     <div class="add-head">
-      <strong>Nouveau travail</strong>
+      <strong id="add-panel-title">Nouveau travail</strong>
       <button class="btn btn-small" type="button" id="btn-close-add">Fermer / rafraîchir</button>
     </div>
     <iframe class="add-frame" id="add-frame" title="Ajout travail" src="about:blank"></iframe>
@@ -125,6 +125,7 @@
     const statusEl = document.getElementById("status");
     const addPanel = document.getElementById("add-panel");
     const addFrame = document.getElementById("add-frame");
+    const addPanelTitle = document.getElementById("add-panel-title");
 
     let allItems = [];
     let currentFilter = "tous";
@@ -205,7 +206,8 @@
     }
 
     function normalize(row) {
-      const original = parsePhotos(row.photos || "");
+      const photosOriginal = parsePhotos(row.photos || "");
+      const ticketsOriginal = parsePhotos(row.tickets || "");
       return {
         id: row.id || row.horodatage,
         titre: row.titre || "",
@@ -215,8 +217,10 @@
         notes: row.notes || "",
         tarif: row.tarif || "",
         personnes: row.personnes || "",
-        photosOriginal: original,
-        photos: original.map(imgUrl),
+        photosOriginal,
+        photos: photosOriginal.map(imgUrl),
+        ticketsOriginal,
+        tickets: ticketsOriginal.map(imgUrl),
       };
     }
 
@@ -257,6 +261,17 @@
       if (!m) return value;
       const sym = { EUR: "€", USD: "$", CHF: "CHF" }[m[2].toUpperCase()] || m[2];
       return m[1] + " " + sym;
+    }
+
+    function openAddTicket(item) {
+      addPanelTitle.textContent = "Ajouter un ticket";
+      addFrame.src =
+        API_URL +
+        "?ui=addTicket&id=" + encodeURIComponent(item.id) +
+        "&titre=" + encodeURIComponent(item.titre);
+      addPanel.hidden = false;
+      startAddPolling();
+      addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function formFields(item) {
@@ -332,6 +347,16 @@
               </div>`).join("")}</div></div>`
           : `<div class="field"><label>Photos</label><p>—</p></div>`;
 
+        const ticketsHtml = item.tickets.length
+          ? `<div class="photos">${item.tickets.map((src, i) => `
+              <div class="photo-wrap">
+                <img src="${src}" alt="Ticket" loading="lazy" />
+                <button class="photo-del" type="button"
+                  data-del-ticket="${escapeHtml(item.id)}"
+                  data-ticket-url="${escapeHtml(item.ticketsOriginal[i])}">×</button>
+              </div>`).join("")}</div>`
+          : `<p>—</p>`;
+
         return `<details class="item ${item.prioritaire ? "prio" : ""}">
           <summary>
             <div class="title">${escapeHtml(item.titre)}</div>
@@ -345,6 +370,13 @@
           <div class="content">
             <div class="field"><label>Notes</label><p>${escapeHtml(item.notes || "—")}</p></div>
             <div class="field"><label>Tarif</label><p>${escapeHtml(formatTarifDisplay(item.tarif))}</p></div>
+            <div class="field">
+              <label>Tickets de dépense</label>
+              ${ticketsHtml}
+              <div class="actions" style="margin-top:0.5rem;">
+                <button class="btn btn-small" type="button" data-add-ticket="${escapeHtml(item.id)}">+ Ajouter un ticket</button>
+              </div>
+            </div>
             <div class="field"><label>Responsable</label><p>${escapeHtml(item.personnes || "—")}</p></div>
             ${photosHtml}
             <div class="actions">
@@ -374,6 +406,7 @@
     }
 
     document.getElementById("btn-add").onclick = () => {
+      addPanelTitle.textContent = "Nouveau travail";
       addFrame.src = ADD_UI_URL;
       addPanel.hidden = false;
       startAddPolling();
@@ -401,6 +434,14 @@
 
       const editBtn = e.target.closest("[data-edit]");
       if (editBtn) { editingId = editBtn.getAttribute("data-edit"); render(); return; }
+
+      const addTicketBtn = e.target.closest("[data-add-ticket]");
+      if (addTicketBtn) {
+        const id = addTicketBtn.getAttribute("data-add-ticket");
+        const item = allItems.find((x) => x.id === id);
+        if (item) openAddTicket(item);
+        return;
+      }
 
       const saveBtn = e.target.closest("[data-save]");
       if (saveBtn) {
@@ -449,6 +490,22 @@
           token: pin,
           id: photoBtn.getAttribute("data-del-photo"),
           photoUrl: photoBtn.getAttribute("data-photo-url"),
+        });
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await loadTravaux();
+        return;
+      }
+
+      const ticketBtn = e.target.closest("[data-del-ticket]");
+      if (ticketBtn) {
+        const pin = askPassword("Mot de passe pour retirer le ticket :");
+        if (!pin) return;
+        if (!confirm("Retirer ce ticket ?")) return;
+        const res = await apiGet({
+          action: "removeTicket",
+          token: pin,
+          id: ticketBtn.getAttribute("data-del-ticket"),
+          ticketUrl: ticketBtn.getAttribute("data-ticket-url"),
         });
         if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await loadTravaux();
