@@ -367,8 +367,23 @@ function escapeHtml(str) {
         return;
       }
 
-      const photoBtn = e.target.closest("[data-del-photo]");
+           const photoBtn = e.target.closest("[data-del-photo]");
       if (photoBtn) {
         const pin = askPassword("Mot de passe pour retirer la photo :");
         if (!pin) return;
-        if (!confirm("Retirer cette
+        if (!confirm("Retirer cette photo ?")) return;
+        const res = await apiGet({
+          action: "removePhoto",
+          token: pin,
+          id: photoBtn.getAttribute("data-del-photo"),
+          photoUrl: photoBtn.getAttribute("data-photo-url"),
+        });
+        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
+        await loadTravaux();
+      }
+    });
+
+    loadTravaux();
+  </script>
+</body>
+</html>
