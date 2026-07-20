@@ -125,6 +125,25 @@
     let allItems = [];
     let currentFilter = "tous";
     let editingId = null;
+    let addPollTimer = null;
+
+    function startAddPolling() {
+      stopAddPolling();
+      addPollTimer = setInterval(loadTravaux, 5000);
+    }
+
+    function stopAddPolling() {
+      if (addPollTimer) {
+        clearInterval(addPollTimer);
+        addPollTimer = null;
+      }
+    }
+
+    function closeAddPanel() {
+      addPanel.hidden = true;
+      addFrame.src = "about:blank";
+      stopAddPolling();
+    }
 
     function askPassword(msg) {
       const v = prompt(msg);
@@ -197,13 +216,13 @@
       };
     }
 
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
-}
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
 
     function formFields(item) {
       return `
@@ -291,7 +310,11 @@ function escapeHtml(str) {
     }
 
     async function loadTravaux() {
-      statusEl.textContent = "Chargement…";
+      if (!addPanel.hidden) {
+        statusEl.textContent = "Synchronisation…";
+      } else {
+        statusEl.textContent = "Chargement…";
+      }
       try {
         const data = await apiGet({ action: "list" });
         allItems = (Array.isArray(data) ? data : []).map(normalize);
@@ -306,12 +329,12 @@ function escapeHtml(str) {
     document.getElementById("btn-add").onclick = () => {
       addFrame.src = ADD_UI_URL;
       addPanel.hidden = false;
+      startAddPolling();
       addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
     document.getElementById("btn-close-add").onclick = () => {
-      addPanel.hidden = true;
-      addFrame.src = "about:blank";
+      closeAddPanel();
       loadTravaux();
     };
 
@@ -367,7 +390,7 @@ function escapeHtml(str) {
         return;
       }
 
-           const photoBtn = e.target.closest("[data-del-photo]");
+      const photoBtn = e.target.closest("[data-del-photo]");
       if (photoBtn) {
         const pin = askPassword("Mot de passe pour retirer la photo :");
         if (!pin) return;
@@ -383,21 +406,12 @@ function escapeHtml(str) {
       }
     });
 
- window.addEventListener("message", function (event) {
-  if (!event.data || event.data.type !== "travaux-added" || !event.data.ok) return;
+    window.addEventListener("message", function (event) {
+      if (!event.data || event.data.type !== "travaux-added" || !event.data.ok) return;
 
-  addPanel.hidden = true;
-  addFrame.src = "about:blank";
-
-  if (event.data.item) {
-    allItems.unshift(normalize(event.data.item));
-    render();
-    statusEl.textContent = "Travail ajouté";
-    setTimeout(loadTravaux, 5000);
-  } else {
-    loadTravaux();
-  }
-});
+      closeAddPanel();
+      loadTravaux();
+    });
 
     loadTravaux();
   </script>
