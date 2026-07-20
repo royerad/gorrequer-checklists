@@ -383,6 +383,17 @@ function escapeHtml(str) {
       }
     });
 
+    window.addEventListener("message", function (event) {
+  if (!event.data || event.data.type !== "travaux-added") return;
+
+  // Fermer le panneau d'ajout
+  addPanel.hidden = true;
+  addFrame.src = "about:blank";
+
+  // Rafraîchir tout de suite
+  loadTravaux();
+});
+
     loadTravaux();
   </script>
 </body>
