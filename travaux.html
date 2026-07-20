@@ -197,11 +197,13 @@
       };
     }
 
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-    }
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
 
     function formFields(item) {
       return `
