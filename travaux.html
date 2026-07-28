@@ -118,6 +118,9 @@
     <button class="btn btn-primary" type="button" id="btn-add">+ Ajouter un travail</button>
     <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
   </div>
+  <div class="top" style="margin-top:-0.5rem;">
+    <button class="btn" type="button" id="btn-depenses" style="flex:1;font-weight:600;">Dépense / ticket de caisse</button>
+  </div>
 
   <div class="panel" id="add-panel" hidden>
     <div class="add-head">
@@ -140,6 +143,7 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxd45Ga2elfOcf3WJ3lfoKkAMRlAWaTXs1FWmU0OLCxVktwTX8UdvRSIzLSN0d_Doa2/exec";
     const ADD_UI_URL = API_URL + "?ui=add";
+    const DEPENSES_UI_URL = API_URL + "?ui=depenses";
 
     const listEl = document.getElementById("list");
     const statusEl = document.getElementById("status");
@@ -227,7 +231,6 @@
 
     function normalize(row) {
       const photosOriginal = parsePhotos(row.photos || "");
-      const ticketsOriginal = parsePhotos(row.tickets || "");
       return {
         id: row.id || row.horodatage,
         titre: row.titre || "",
@@ -239,8 +242,6 @@
         personnes: row.personnes || "",
         photosOriginal,
         photos: photosOriginal.map(imgUrl),
-        ticketsOriginal,
-        tickets: ticketsOriginal.map(imgUrl),
       };
     }
 
@@ -281,17 +282,6 @@
       if (!m) return value;
       const sym = { EUR: "€", USD: "$", CHF: "CHF" }[m[2].toUpperCase()] || m[2];
       return m[1] + " " + sym;
-    }
-
-    function openAddTicket(item) {
-      addPanelTitle.textContent = "Ajouter un ticket";
-      addFrame.src =
-        API_URL +
-        "?ui=addTicket&id=" + encodeURIComponent(item.id) +
-        "&titre=" + encodeURIComponent(item.titre);
-      addPanel.hidden = false;
-      startAddPolling();
-      addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function formFields(item) {
@@ -367,16 +357,6 @@
               </div>`).join("")}</div></div>`
           : `<div class="field"><label>Photos</label><p>—</p></div>`;
 
-        const ticketsHtml = item.tickets.length
-          ? `<div class="photos">${item.tickets.map((src, i) => `
-              <div class="photo-wrap">
-                <img src="${src}" alt="Ticket" loading="lazy" />
-                <button class="photo-del" type="button"
-                  data-del-ticket="${escapeHtml(item.id)}"
-                  data-ticket-url="${escapeHtml(item.ticketsOriginal[i])}">×</button>
-              </div>`).join("")}</div>`
-          : `<p>—</p>`;
-
         return `<details class="item ${item.prioritaire ? "prio" : ""}">
           <summary>
             <div class="title">${escapeHtml(item.titre)}</div>
@@ -390,13 +370,6 @@
           <div class="content">
             <div class="field"><label>Notes</label><p>${escapeHtml(item.notes || "—")}</p></div>
             <div class="field"><label>Tarif</label><p>${escapeHtml(formatTarifDisplay(item.tarif))}</p></div>
-            <div class="field">
-              <label>Tickets de dépense</label>
-              ${ticketsHtml}
-              <div class="actions" style="margin-top:0.5rem;">
-                <button class="btn btn-small" type="button" data-add-ticket="${escapeHtml(item.id)}">+ Ajouter un ticket</button>
-              </div>
-            </div>
             <div class="field"><label>Responsable</label><p>${escapeHtml(item.personnes || "—")}</p></div>
             ${photosHtml}
             <div class="actions">
@@ -433,6 +406,13 @@
       addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
+    document.getElementById("btn-depenses").onclick = () => {
+      addPanelTitle.textContent = "Dépense / ticket de caisse";
+      addFrame.src = DEPENSES_UI_URL;
+      addPanel.hidden = false;
+      addPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
     document.getElementById("btn-close-add").onclick = () => {
       closeAddPanel();
       loadTravaux();
@@ -454,14 +434,6 @@
 
       const editBtn = e.target.closest("[data-edit]");
       if (editBtn) { editingId = editBtn.getAttribute("data-edit"); render(); return; }
-
-      const addTicketBtn = e.target.closest("[data-add-ticket]");
-      if (addTicketBtn) {
-        const id = addTicketBtn.getAttribute("data-add-ticket");
-        const item = allItems.find((x) => x.id === id);
-        if (item) openAddTicket(item);
-        return;
-      }
 
       const saveBtn = e.target.closest("[data-save]");
       if (saveBtn) {
@@ -513,29 +485,19 @@
         });
         if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await loadTravaux();
-        return;
-      }
-
-      const ticketBtn = e.target.closest("[data-del-ticket]");
-      if (ticketBtn) {
-        const pin = askPassword("Mot de passe pour retirer le ticket :");
-        if (!pin) return;
-        if (!confirm("Retirer ce ticket ?")) return;
-        const res = await apiGet({
-          action: "removeTicket",
-          token: pin,
-          id: ticketBtn.getAttribute("data-del-ticket"),
-          ticketUrl: ticketBtn.getAttribute("data-ticket-url"),
-        });
-        if (!res || !res.ok) return alert((res && res.error) || "Erreur");
-        await loadTravaux();
       }
     });
 
     window.addEventListener("message", function (event) {
-      if (!event.data || event.data.type !== "travaux-added" || !event.data.ok) return;
-      closeAddPanel();
-      loadTravaux();
+      if (!event.data) return;
+      if (event.data.type === "travaux-added" && event.data.ok) {
+        closeAddPanel();
+        loadTravaux();
+        return;
+      }
+      if (event.data.type === "tickets-sent" && event.data.ok) {
+        closeAddPanel();
+      }
     });
 
     loadTravaux();
