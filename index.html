@@ -176,7 +176,8 @@
       vertical-align: middle;
     }
 
-    #reset {
+    .btn-home {
+      display: block;
       width: 100%;
       margin-top: 1rem;
       padding: 0.75rem 1rem;
@@ -185,10 +186,12 @@
       background: var(--card);
       color: var(--text);
       font-size: 1rem;
-      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      box-sizing: border-box;
     }
 
-    #reset:hover {
+    .btn-home:hover {
       border-color: #bbb;
     }
 
@@ -344,9 +347,12 @@
     </div>
   </details>
 
-  <button type="button" id="reset">Réinitialiser</button>
+  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
 
   <script>
+    const PREFIX = "entree-";
+    const CLOSED_KEY = "entree-closed-at";
+    const GRACE_MS = 60 * 1000;
     const boxes = document.querySelectorAll('input[type="checkbox"][data-key]');
     const progress = document.getElementById("progress");
 
@@ -356,8 +362,30 @@
       progress.textContent = done + " / " + total + " terminé";
     }
 
+    function clearAllChecks() {
+      boxes.forEach((box) => {
+        box.checked = false;
+        localStorage.setItem(PREFIX + box.dataset.key, "0");
+      });
+    }
+
+    function markClosed() {
+      localStorage.setItem(CLOSED_KEY, String(Date.now()));
+    }
+
+    function clearClosedMark() {
+      localStorage.removeItem(CLOSED_KEY);
+    }
+
+    // Si la page a été quittée depuis plus d'1 minute → coches à zéro
+    const closedAt = parseInt(localStorage.getItem(CLOSED_KEY) || "0", 10);
+    if (closedAt && Date.now() - closedAt >= GRACE_MS) {
+      clearAllChecks();
+    }
+    clearClosedMark();
+
     boxes.forEach((box) => {
-      const key = "entree-" + box.dataset.key;
+      const key = PREFIX + box.dataset.key;
       box.checked = localStorage.getItem(key) === "1";
       box.addEventListener("click", (e) => e.stopPropagation());
       box.addEventListener("change", () => {
@@ -366,13 +394,11 @@
       });
     });
 
-    document.getElementById("reset").onclick = () => {
-      boxes.forEach((box) => {
-        box.checked = false;
-        localStorage.setItem("entree-" + box.dataset.key, "0");
-      });
-      updateProgress();
-    };
+    window.addEventListener("pagehide", markClosed);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") markClosed();
+      else clearClosedMark();
+    });
 
     updateProgress();
   </script>
