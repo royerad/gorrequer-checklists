@@ -51,9 +51,9 @@
     "id": "kristell-linge",
     "type": "contact",
     "question": "Comment gérer mon linge ?",
-    "titre": "Kristell — lavage du linge",
-    "mots_cles": "kristell christell linge laver ménage weekend prix",
-    "contenu": "Demander à Kristell de passer pour laver votre linge (vous entendre sur le prix et déposer les €).",
+    "titre": "Kristell — Gorreq Ménage (linge)",
+    "mots_cles": "kristell christell gorreq menage ménage linge laver weekend prix",
+    "contenu": "Demander à Kristell de passer pour laver votre linge (vous entendre sur le prix et déposer les €). Intervient aussi pour le ménage les weekends et parfois en semaine.",
     "telephone": "+33 6 62 37 49 12"
   },
   {
@@ -182,25 +182,25 @@
     "question": "Je cherche une femme de ménage ?",
     "titre": "Femme de ménage — cousins Thiébaut",
     "mots_cles": "femme ménage ménagère ouragan torchons microfibre thiébaut sms",
-    "contenu": "À joindre par SMS, ne travaille pas tous les jours — vous entendre sur les prix. Faut être présent ; n'aime que les torchons microfibre.",
+    "contenu": "Femme de ménage des cousins Thiébaut. À joindre par SMS, ne travaille pas tous les jours — vous entendre sur les prix. Ouragan : faut être présent ; n'aime que les torchons microfibre.",
     "telephone": "+33 6 75 42 66 06"
   },
   {
     "id": "christell-menage",
     "type": "contact",
     "question": "Je cherche une femme de ménage ?",
-    "titre": "Christell / Kristell",
-    "mots_cles": "christell kristell ménage weekend semaine linge",
-    "contenu": "Intervient les weekends et parfois en semaine, à voir.",
+    "titre": "Kristell — Gorreq Ménage",
+    "mots_cles": "christell kristell gorreq menage ménage weekend semaine linge",
+    "contenu": "Kristell (Gorreq Ménage). Intervient les weekends et parfois en semaine, à voir.",
     "telephone": "+33 6 62 37 49 12"
   },
   {
     "id": "plombier-mobe",
     "type": "contact",
     "question": "Je cherche un plombier ?",
-    "titre": "Plombier — M. MOBE / Poudoulec",
-    "mots_cles": "plombier mobe poudoulec plonévez fuite eau",
-    "contenu": "Monsieur MOBE (entreprise Poudoulec à Plonévez).",
+    "titre": "Denis MOBE — Poudoulec (plombier)",
+    "mots_cles": "plombier mobe denis poudoulec pouloudec plonévez fuite eau chauffage vmc aération plomberie",
+    "contenu": "Denis MOBE, entreprise Poudoulec (Plonévez) — électricité, plomberie, chauffage. Plomberie parfait. Très utile pour l'aération / VMC. Chauffage électrique / pompe à chaleur. En contact avec le Consuel pour l'électricité. N'aime pas les bricoles, plutôt le neuf.",
     "telephone": "02 98 81 50 22 / 06 83 52 43 02",
     "email": "Etude@poudoulec.fr"
   },
@@ -208,9 +208,9 @@
     "id": "electricien-mobe",
     "type": "contact",
     "question": "Je cherche un électricien ?",
-    "titre": "Électricien — M. MOBE / Poudoulec",
-    "mots_cles": "électricien electricien mobe poudoulec courant",
-    "contenu": "Monsieur MOBE (entreprise Poudoulec à Plonévez).",
+    "titre": "Denis MOBE — Poudoulec (électricien)",
+    "mots_cles": "électricien electricien mobe denis poudoulec pouloudec courant chauffage pompe chaleur consuel vmc",
+    "contenu": "Denis MOBE, entreprise Poudoulec (Plonévez) — électricité, plomberie, chauffage. En contact avec le Consuel pour l'électricité. Chauffage électrique / pompe à chaleur. Très utile pour VMC / aération. N'aime pas les bricoles, plutôt le neuf.",
     "telephone": "02 98 81 50 22 / 06 83 52 43 02",
     "email": "Etude@poudoulec.fr"
   },
@@ -227,18 +227,18 @@
     "id": "ebeniste",
     "type": "contact",
     "question": "Je cherche un ébéniste ?",
-    "titre": "Ébéniste",
-    "mots_cles": "ébéniste ebeniste chaise meuble fenêtre porte bois mairie locronan",
-    "contenu": "Conseil de l'ancien maire. Répare chaise, meuble, fabrique fenêtres/portes en bois. Travail au black, recommandé par la mairie de Locronan. Jamais travaillé avec lui.",
+    "titre": "Francis BOUIN — ébéniste",
+    "mots_cles": "ébéniste ebeniste bouin francis chaise meuble fenêtre porte bois mairie locronan black",
+    "contenu": "Francis BOUIN. Au black. Répare chaise, meuble, et fabrique des fenêtres/portes en bois. Jamais travaillé avec lui. Recommandé par la mairie de Locronan (conseil de l'ancien maire).",
     "telephone": "07 81 24 18 70"
   },
   {
     "id": "menuisier",
     "type": "contact",
     "question": "Je cherche un menuisier / fenêtre neuve ?",
-    "titre": "Menuisier — charpente & fenêtres",
-    "mots_cles": "menuisier fenêtre charpente porte alu pvc bois plancher portail entrée",
-    "contenu": "Charpente, porte, fenêtre (alu/pvc/bois), plancher. Tient parole, peu communicatif, efficace, soigneux, bon conseil. A fait le portail extérieur de l'entrée.",
+    "titre": "DOUERIN — menuisier",
+    "mots_cles": "menuisier douerin fenêtre charpente porte alu pvc bois plancher portail entrée",
+    "contenu": "DOUERIN. Charpente, porte, fenêtre (alu/pvc/bois), plancher. Tient parole, peu communicatif, efficace, soigneux, bon conseil. A fait le portail extérieur de l'entrée.",
     "telephone": "06 86 83 55 67"
   },
   {
@@ -254,27 +254,27 @@
     "id": "foret-lefloch",
     "type": "contact",
     "question": "Je veux un conseil sur les plantations de forêt ?",
-    "titre": "Jean-Baptiste Le Floch — bois",
-    "mots_cles": "forêt bois billes lefloch douarnenez volume vente coupe",
-    "contenu": "Estime le volume de bois, négocie la vente des billes, coupe et prépare les billes — ne gère pas les branches. Difficile à joindre, mais efficace. Très bons conseils (famille Le Floch à Douarnenez).",
+    "titre": "Jean-Baptiste LE FLOCH — négoce bois",
+    "mots_cles": "forêt bois billes lefloch le floch jean-baptiste douarnenez volume vente coupe négoce arbres",
+    "contenu": "Jean-Baptiste LE FLOCH. Estime le volume de bois, négocie la vente des billes, coupe et prépare les billes — ne gère pas les branches. Très difficile à joindre, mais efficace après. De très bons conseils (famille Le Floch à Douarnenez fidèle).",
     "telephone": "06 63 85 39 32"
   },
   {
     "id": "bucheron-martine",
     "type": "contact",
     "question": "Je veux employer un bûcheron pour couper du bois ?",
-    "titre": "Martine Le Floch — contrats coupe",
-    "mots_cles": "bûcheron bucheron bois coupe contrat assurance martine lefloch",
-    "contenu": "Remet des contrats pour permettre la coupe du bois par des particuliers — assurance obligatoire !",
+    "titre": "Mme LE FLOCH — Chambre d'agriculture",
+    "mots_cles": "bûcheron bucheron bois coupe contrat assurance martine lefloch le floch chambre agriculture permis",
+    "contenu": "Mme LE FLOCH (Chambre d'agriculture). Remet des permis / contrats pour permettre la coupe du bois par des particuliers — assurance obligatoire !",
     "telephone": "06 60 73 65 71"
   },
   {
     "id": "macon-perennou",
     "type": "contact",
     "question": "Je cherche un maçon ?",
-    "titre": "Maçon — Entreprise Perennou",
-    "mots_cles": "maçon macon perennou pierre mur terrassement chemin",
-    "contenu": "Gros œuvre, murs en pierre, percements portes/fenêtres, terrassements, chemins, places… Tient parole, envoie des messages avec photos, assez rapide.",
+    "titre": "Entreprise PERENNOU — maçon",
+    "mots_cles": "maçon macon perennou entreprise pierre mur terrassement chemin",
+    "contenu": "Entreprise PERENNOU. Gros œuvre, murs en pierre, percements portes/fenêtres, terrassements, chemins, places… Tient parole, envoie des messages avec photos, assez rapide.",
     "telephone": "06 08 84 89 18"
   },
   {
@@ -299,9 +299,9 @@
     "id": "toiture-martin",
     "type": "contact",
     "question": "Je veux nettoyer ou réparer ma toiture / gouttière ?",
-    "titre": "Couverture — MARTIN Roland / MBC",
-    "mots_cles": "toiture gouttière goutiere velux vmc couverture martin mbc manoir",
-    "contenu": "Toiture, gouttière, Velux, sortie VMC, nettoyer gouttières du manoir. Difficile à joindre mais tient parole, peu de délai.",
+    "titre": "Roland MARTIN — toiture & Velux (MBC)",
+    "mots_cles": "toiture gouttière goutiere velux vmc couverture martin roland rolan mbc manoir",
+    "contenu": "Roland MARTIN (MBC Couverture). Toiture, gouttière, Velux, sortie VMC, nettoyer gouttières du manoir. Difficile à joindre mais tient parole, peu de délai.",
     "telephone": "06 84 10 07 50",
     "email": "mcb.couverture29@gmail.com"
   },
@@ -318,9 +318,9 @@
     "id": "plaquiste-fouquet",
     "type": "contact",
     "question": "Je cherche un plaquiste / carreleur / faïence ?",
-    "titre": "Plaquiste & carreleur — Rémy FOUQUET",
-    "mots_cles": "plaquiste placo isolation carreleur carrelage faïence faience chape fouquet",
-    "contenu": "Pose de placo, isolation + sols, chape liquide de finition, carrelage et faïence. Préfère qu'on lui fournisse portes / carrelage / faïence. Très pragmatique et rapide.",
+    "titre": "Rémy FOUQUET — plaquiste / carrelage",
+    "mots_cles": "plaquiste placo isolation carreleur carrelage faïence faience chape fouquet rémy remy",
+    "contenu": "Rémy FOUQUET. Pose de placo, isolation + sols, chape liquide de finition, carrelage et faïence. Préfère qu'on lui fournisse portes / carrelage / faïence à poser. Très pragmatique et rapide.",
     "telephone": "06 63 56 86 28"
   },
   {
@@ -340,5 +340,15 @@
     "mots_cles": "jardinier quinnec tondeuse gazon pelouse année",
     "contenu": "Tond l'ensemble du gazon à l'année.",
     "telephone": "06 24 97 33 48"
+  },
+  {
+    "id": "chauffage-mobe",
+    "type": "contact",
+    "question": "Je cherche du chauffage / pompe à chaleur ?",
+    "titre": "Denis MOBE — chauffage",
+    "mots_cles": "chauffage pompe chaleur électrique electrique mobe denis poudoulec",
+    "contenu": "Denis MOBE (Poudoulec) : chauffage électrique / pompe à chaleur. Voir aussi plomberie et électricité.",
+    "telephone": "02 98 81 50 22 / 06 83 52 43 02",
+    "email": "Etude@poudoulec.fr"
   }
 ]
