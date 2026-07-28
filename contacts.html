@@ -56,13 +56,13 @@
       display: block; font-size: 0.75rem; text-transform: uppercase;
       letter-spacing: .04em; color: var(--muted); margin-bottom: 0.2rem;
     }
-    .field p { margin: 0; }
+    .field p { margin: 0; white-space: pre-wrap; }
     a.contact-link { color: var(--ok); font-weight: 600; text-decoration: none; }
     input, textarea {
       width: 100%; padding: 0.55rem 0.65rem; border: 1px solid var(--line);
       border-radius: 8px; font: inherit; background: #fff;
     }
-    textarea { min-height: 70px; }
+    textarea { min-height: 70px; white-space: pre-wrap; }
     .actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
     .empty, .error {
       background: var(--card); border: 1px dashed var(--line); border-radius: 12px;
@@ -84,7 +84,7 @@
     <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
   </div>
 
-  <input id="search" type="search" placeholder="Rechercher un nom, métier, téléphone…" />
+      <input id="search" type="search" placeholder="Rechercher un nom, entreprise, métier…" />
 
   <div class="filters" id="filters"></div>
   <p class="status" id="status">Chargement…</p>
@@ -146,7 +146,7 @@
       return allItems.filter((c) => {
         if (roleFilter !== "tous" && c.role !== roleFilter) return false;
         if (!q) return true;
-        const blob = [c.nom, c.prenom, c.role, c.telephone, c.email, c.note].join(" ").toLowerCase();
+        const blob = [c.nom, c.prenom, c.entreprise, c.role, c.telephone, c.email, c.note, c.recommandations].join(" ").toLowerCase();
         return blob.includes(q);
       });
     }
@@ -161,25 +161,35 @@
     }
 
     function formFields(c) {
-      c = c || { nom: "", prenom: "", role: "", telephone: "", email: "", note: "" };
+      c = c || { nom: "", prenom: "", entreprise: "", role: "", telephone: "", email: "", note: "", recommandations: "" };
       return `
-        <div class="field"><label>Nom</label><input id="f-nom" value="${escapeHtml(c.nom)}" /></div>
-        <div class="field"><label>Prénom</label><input id="f-prenom" value="${escapeHtml(c.prenom)}" /></div>
-        <div class="field"><label>Rôle / métier</label><input id="f-role" value="${escapeHtml(c.role)}" placeholder="Plombier, Électricien…" /></div>
-        <div class="field"><label>Téléphone</label><input id="f-tel" value="${escapeHtml(c.telephone)}" /></div>
-        <div class="field"><label>Email</label><input id="f-email" value="${escapeHtml(c.email)}" /></div>
-        <div class="field"><label>Note</label><textarea id="f-note">${escapeHtml(c.note)}</textarea></div>`;
+        <div class="field"><label>Nom</label><input id="f-nom" value="${escapeHtml(c.nom || "")}" /></div>
+        <div class="field"><label>Prénom</label><input id="f-prenom" value="${escapeHtml(c.prenom || "")}" /></div>
+        <div class="field"><label>Entreprise</label><input id="f-entreprise" value="${escapeHtml(c.entreprise || "")}" /></div>
+        <div class="field"><label>Rôle / métier</label><input id="f-role" value="${escapeHtml(c.role || "")}" placeholder="Plombier, Électricien…" /></div>
+        <div class="field"><label>Téléphone</label><input id="f-tel" value="${escapeHtml(c.telephone || "")}" /></div>
+        <div class="field"><label>Email</label><input id="f-email" value="${escapeHtml(c.email || "")}" /></div>
+        <div class="field"><label>Note</label><textarea id="f-note">${escapeHtml(c.note || "")}</textarea></div>
+        <div class="field"><label>Recommandations &amp; astuces</label><textarea id="f-recommandations">${escapeHtml(c.recommandations || "")}</textarea></div>`;
     }
 
     function readForm() {
       return {
         nom: document.getElementById("f-nom").value.trim(),
         prenom: document.getElementById("f-prenom").value.trim(),
+        entreprise: document.getElementById("f-entreprise").value.trim(),
         role: document.getElementById("f-role").value.trim(),
         telephone: document.getElementById("f-tel").value.trim(),
         email: document.getElementById("f-email").value.trim(),
         note: document.getElementById("f-note").value.trim(),
+        recommandations: document.getElementById("f-recommandations").value.trim(),
       };
+    }
+
+    function displayName(c) {
+      const person = (c.prenom + " " + c.nom).trim();
+      if (person && c.entreprise) return person + " — " + c.entreprise;
+      return person || c.entreprise || "Sans nom";
     }
 
     function render() {
@@ -224,11 +234,12 @@
         const mail = c.email ? "mailto:" + c.email : "";
         return `<details class="item">
           <summary>
-            <div class="name">${escapeHtml((c.prenom + " " + c.nom).trim() || c.nom || c.prenom)}</div>
+            <div class="name">${escapeHtml(displayName(c))}</div>
             <span class="chevron">›</span>
             <div class="role">${escapeHtml(c.role || "—")}</div>
           </summary>
           <div class="content">
+            <div class="field"><label>Entreprise</label><p>${escapeHtml(c.entreprise || "—")}</p></div>
             <div class="field"><label>Téléphone</label>
               <p>${tel ? `<a class="contact-link" href="${tel}">${escapeHtml(c.telephone)}</a>` : "—"}</p>
             </div>
@@ -236,6 +247,7 @@
               <p>${mail ? `<a class="contact-link" href="${mail}">${escapeHtml(c.email)}</a>` : "—"}</p>
             </div>
             <div class="field"><label>Note</label><p>${escapeHtml(c.note || "—")}</p></div>
+            <div class="field"><label>Recommandations &amp; astuces</label><p>${escapeHtml(c.recommandations || "—")}</p></div>
             <div class="actions">
               <button class="btn btn-small" type="button" data-edit="${escapeHtml(c.id)}">Modifier</button>
               <button class="btn btn-small btn-danger" type="button" data-delete="${escapeHtml(c.id)}">Supprimer</button>
@@ -285,7 +297,7 @@
         const pin = askPassword("Mot de passe pour ajouter :");
         if (!pin) return;
         const f = readForm();
-        if (!f.nom && !f.prenom) return alert("Indiquez au moins un nom ou prénom");
+        if (!f.nom && !f.prenom && !f.entreprise) return alert("Indiquez au moins un nom, prénom ou entreprise");
         const res = await api(Object.assign({ action: "add", token: pin }, f));
         if (!res || !res.ok) return alert((res && res.error) || "Erreur");
         await load();
