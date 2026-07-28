@@ -247,19 +247,30 @@
     .btn-home {
       display: block;
       width: 100%;
-      margin-top: 1rem;
+      margin: 0 0 1rem;
       padding: 0.75rem 1rem;
-      border: 1px solid var(--line);
+      border: 1px solid var(--accent);
       border-radius: 10px;
-      background: var(--card);
-      color: var(--text);
+      background: var(--accent);
+      color: #fff;
       font-size: 1rem;
+      font-weight: 600;
       text-align: center;
       text-decoration: none;
       box-sizing: border-box;
     }
 
-    .btn-home:hover { border-color: #bbb; }
+    .btn-home:hover { opacity: 0.92; }
+
+    .btn-home.bottom {
+      margin: 1rem 0 0;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-home.bottom:hover { opacity: 0.92; }
 
     .progress {
       margin: 0 0 1rem;
@@ -277,6 +288,8 @@
   </style>
 </head>
 <body>
+  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
+
   <h1>Sortie</h1>
   <p class="progress" id="progress">Choisissez un type de sortie</p>
 
@@ -323,7 +336,7 @@
       <details class="item">
         <summary>
           <input class="check" type="checkbox" data-key="petite-eau" />
-          <span class="title">Couper l’eau</span>
+          <span class="title">n°4 Couper l’eau</span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -336,7 +349,7 @@
       <details class="item">
         <summary>
           <input class="check" type="checkbox" data-key="petite-eau-chaude" />
-          <span class="title">Fermer l’eau chaude</span>
+          <span class="title">n°5 Fermer l’eau chaude</span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -348,12 +361,56 @@
       <details class="item">
         <summary>
           <input class="check" type="checkbox" data-key="petite-gaz" />
-          <span class="title">Couper le gaz</span>
+          <span class="title">n°6 Couper le gaz</span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
-          <p>Couper le gaz (bonbonne / bouchon noir).</p>
+          <p>Couper le gaz (bonbonne / bouchon noir). Assurez-vous que la manette est ouverte sous la cuisinière.</p>
           <img src="images/gaz.jpg" alt="Gaz" />
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-tv" />
+          <span class="title">TV — connexions</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Remettre en état les connexions si vous avez branché vos ordinateurs.</p>
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-laver-frigo" />
+          <span class="title">Laver le frigo</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Laver le frigo (sous les tiroirs aussi) et dans le congélateur.</p>
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-barbecue" />
+          <span class="title">Cendres du barbecue</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Vider les cendres du barbecue dans un sac poubelle noir.</p>
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="petite-meubles-jardin" />
+          <span class="title">Meubles de jardin</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Tous les meubles de jardin dans le couloir central au rez-de-chaussée.</p>
         </div>
       </details>
 
@@ -362,7 +419,7 @@
       <details class="item priority">
         <summary>
           <input class="check" type="checkbox" data-key="petite-alarme" />
-          <span class="title">Activer l’alarme <span class="badge">Prioritaire</span></span>
+          <span class="title">n°3 Activer l’alarme <span class="badge">Prioritaire</span></span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -375,7 +432,7 @@
       <details class="item priority">
         <summary>
           <input class="check" type="checkbox" data-key="petite-electricite" />
-          <span class="title">Couper l’électricité générale <span class="badge">Prioritaire</span></span>
+          <span class="title">n°2 Couper l’électricité générale <span class="badge">Prioritaire</span></span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -398,7 +455,7 @@
       <details class="item priority">
         <summary>
           <input class="check" type="checkbox" data-key="petite-clefs" />
-          <span class="title">Remettre les clefs <span class="badge">Prioritaire</span></span>
+          <span class="title">n°1 Remettre les clefs <span class="badge">Prioritaire</span></span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -458,7 +515,7 @@
       <details class="item">
         <summary>
           <input class="check" type="checkbox" data-key="grande-eau-chaude" />
-          <span class="title">Fermer l’eau chaude</span>
+          <span class="title">n°5 Fermer l’eau chaude</span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -482,12 +539,56 @@
       <details class="item">
         <summary>
           <input class="check" type="checkbox" data-key="grande-gaz" />
-          <span class="title">Couper le gaz</span>
+          <span class="title">n°6 Couper le gaz</span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
-          <p>Couper le gaz (bonbonne / bouchon noir).</p>
+          <p>Couper le gaz (bonbonne / bouchon noir). Assurez-vous que la manette est ouverte sous la cuisinière.</p>
           <img src="images/gaz.jpg" alt="Gaz" />
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-tv" />
+          <span class="title">TV — connexions</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Remettre en état les connexions si vous avez branché vos ordinateurs.</p>
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-laver-frigo" />
+          <span class="title">Laver le frigo</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Laver le frigo (sous les tiroirs aussi) et dans le congélateur.</p>
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-barbecue" />
+          <span class="title">Cendres du barbecue</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Vider les cendres du barbecue dans un sac poubelle noir.</p>
+        </div>
+      </details>
+
+      <details class="item">
+        <summary>
+          <input class="check" type="checkbox" data-key="grande-meubles-jardin" />
+          <span class="title">Meubles de jardin</span>
+          <span class="chevron">›</span>
+        </summary>
+        <div class="content">
+          <p>Tous les meubles de jardin dans le couloir central au rez-de-chaussée.</p>
         </div>
       </details>
 
@@ -539,7 +640,7 @@
       <details class="item priority">
         <summary>
           <input class="check" type="checkbox" data-key="grande-alarme" />
-          <span class="title">Activer l’alarme <span class="badge">Prioritaire</span></span>
+          <span class="title">n°3 Activer l’alarme <span class="badge">Prioritaire</span></span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -552,7 +653,7 @@
       <details class="item priority">
         <summary>
           <input class="check" type="checkbox" data-key="grande-electricite" />
-          <span class="title">Couper l’électricité générale <span class="badge">Prioritaire</span></span>
+          <span class="title">n°2 Couper l’électricité générale <span class="badge">Prioritaire</span></span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -576,7 +677,7 @@
       <details class="item priority">
         <summary>
           <input class="check" type="checkbox" data-key="grande-clefs" />
-          <span class="title">Remettre les clefs <span class="badge">Prioritaire</span></span>
+          <span class="title">n°1 Remettre les clefs <span class="badge">Prioritaire</span></span>
           <span class="chevron">›</span>
         </summary>
         <div class="content">
@@ -587,7 +688,7 @@
     </div>
   </details>
 
-  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
+  <a class="btn-home bottom" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
 
   <script>
     const PREFIX = "sortie-";

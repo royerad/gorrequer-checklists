@@ -179,20 +179,33 @@
     .btn-home {
       display: block;
       width: 100%;
-      margin-top: 1rem;
+      margin: 0 0 1rem;
       padding: 0.75rem 1rem;
-      border: 1px solid var(--line);
+      border: 1px solid var(--accent);
       border-radius: 10px;
-      background: var(--card);
-      color: var(--text);
+      background: var(--accent);
+      color: #fff;
       font-size: 1rem;
+      font-weight: 600;
       text-align: center;
       text-decoration: none;
       box-sizing: border-box;
     }
 
     .btn-home:hover {
-      border-color: #bbb;
+      opacity: 0.92;
+    }
+
+    .btn-home.bottom {
+      margin: 1rem 0 0;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-home.bottom:hover {
+      opacity: 0.92;
     }
 
     .progress {
@@ -211,6 +224,8 @@
   </style>
 </head>
 <body>
+  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
+
   <h1>Entrée</h1>
   <p class="progress" id="progress">0 / 0 terminé</p>
 
@@ -303,7 +318,7 @@
       <span class="chevron">›</span>
     </summary>
     <div class="content">
-      <p>Allez à l’extérieur, à gauche du cabanon des WC. Sur les deux bonbonnes de gaz, ouvrez-en une en tournant le bouchon noir en haut.</p>
+      <p>Allez à l’extérieur, à gauche du cabanon des WC. Sur les deux bonbonnes de gaz, ouvrez-en une en tournant le bouchon noir en haut. Assurez-vous que la manette est ouverte sous la cuisinière.</p>
       <img src="images/gaz.jpg" alt="Gaz cuisine" />
     </div>
   </details>
@@ -347,7 +362,7 @@
     </div>
   </details>
 
-  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
+  <a class="btn-home bottom" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
 
   <script>
     const PREFIX = "entree-";

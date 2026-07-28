@@ -24,6 +24,8 @@
       background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer;
     }
     .btn-primary { background: var(--ok); border-color: var(--ok); color: #fff; flex: 1; font-weight: 600; }
+    .btn-blue { background: #2b6cb0; border-color: #2b6cb0; color: #fff; flex: 1; font-weight: 600; }
+    .btn-yellow { background: #e6b422; border-color: #d4a017; color: #1c1c1c; font-weight: 600; }
     .btn-danger { border-color: #e7b3a6; color: var(--priority); }
     .btn-small { padding: 0.45rem 0.65rem; font-size: 0.85rem; }
     a.btn { text-decoration: none; }
@@ -32,7 +34,7 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      margin: 0 0 0.75rem;
+      margin: 0 0 1rem;
       padding: 0.75rem 0.9rem;
       border-radius: 10px;
       border: 1px solid var(--ok);
@@ -93,14 +95,14 @@
   </style>
 </head>
 <body>
+  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
+
   <h1>Carnet d'adresses</h1>
   <p class="subtitle">Contacts utiles — tri alphabétique</p>
 
-  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
-
   <div class="top">
-    <button class="btn btn-primary" type="button" id="btn-add">+ Ajouter</button>
-    <button class="btn" type="button" id="btn-refresh">Rafraîchir</button>
+    <button class="btn btn-blue" type="button" id="btn-add">+ Ajouter</button>
+    <button class="btn btn-yellow" type="button" id="btn-refresh">Rafraîchir</button>
   </div>
 
       <input id="search" type="search" placeholder="Rechercher un nom, entreprise, métier…" />
