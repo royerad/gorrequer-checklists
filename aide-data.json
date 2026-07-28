@@ -1,0 +1,344 @@
+[
+  {
+    "id": "aide-parents",
+    "type": "contact",
+    "question": "Comment obtenir de l'aide ?",
+    "titre": "Accueil — parents",
+    "mots_cles": "aide gestion maison parents jean-yves paul-louis jy pl sms",
+    "contenu": "Pour toutes questions concernant la gestion de la maison, vous pouvez joindre vos parents, Jean-Yves ou Paul-Louis."
+  },
+  {
+    "id": "aide-locale",
+    "type": "contact",
+    "question": "Comment obtenir de l'aide ?",
+    "titre": "Aide locale — Bastien & Brigitte",
+    "mots_cles": "aide locale problème sur place cousin bastien drouard brigitte nicolas brocante locronan puits",
+    "contenu": "En cas de problème sur place, notre cousin Bastien DROUARD habite à côté. Brigitte NICOLAS tient une brocante sur la place de Locronan, devant le puits."
+  },
+  {
+    "id": "aspirateur",
+    "type": "astuce",
+    "question": "Comment gérer les appareils ménagers ?",
+    "titre": "Aspirateur",
+    "mots_cles": "aspirateur sac ménager placard wc bas stock",
+    "contenu": "Merci de vérifier s'il y a un sac à l'intérieur ! Un gros stock de sacs est placé dans le placard à côté des WC en bas."
+  },
+  {
+    "id": "lave-vaisselle",
+    "type": "astuce",
+    "question": "Comment gérer les appareils ménagers ?",
+    "titre": "Lave-vaisselle",
+    "mots_cles": "lave-vaisselle machine vaisselle programme produit tout-en-1",
+    "contenu": "Porte fermée, choisir le programme et allumer sur ON. Merci d'alimenter la réserve de produit tout-en-1 exclusivement."
+  },
+  {
+    "id": "lave-linge",
+    "type": "astuce",
+    "question": "Comment gérer les appareils ménagers ?",
+    "titre": "Machine à laver le linge — attention courant",
+    "mots_cles": "machine laver linge court-circuit décharge courant compteur prise danger",
+    "contenu": "Il y a un court-circuit : on a souvent des décharges de courant en touchant la machine. Conseil : couper le compteur à proximité de la prise de courant de la machine."
+  },
+  {
+    "id": "linge-general",
+    "type": "astuce",
+    "question": "Comment gérer mon linge ?",
+    "titre": "Linge — principe",
+    "mots_cles": "linge laver machine rez-de-chaussée produits sécher grenier super u",
+    "contenu": "En principe on ne quitte pas Gorrequer sans avoir lavé son linge. Une machine est au rez-de-chaussée — merci de compléter les produits nécessaires. Autre option : Super U puis faire sécher le linge dans le grenier."
+  },
+  {
+    "id": "kristell-linge",
+    "type": "contact",
+    "question": "Comment gérer mon linge ?",
+    "titre": "Kristell — lavage du linge",
+    "mots_cles": "kristell christell linge laver ménage weekend prix",
+    "contenu": "Demander à Kristell de passer pour laver votre linge (vous entendre sur le prix et déposer les €).",
+    "telephone": "+33 6 62 37 49 12"
+  },
+  {
+    "id": "ampoules",
+    "type": "astuce",
+    "question": "Je cherche des ampoules ?",
+    "titre": "Ampoules",
+    "mots_cles": "ampoule lumière stock lit clos vaisselier",
+    "contenu": "Le stock est à maintenir si vous l'utilisez — dans le lit clos à proximité du vaisselier."
+  },
+  {
+    "id": "cles",
+    "type": "astuce",
+    "question": "Je cherche une clé ?",
+    "titre": "Clés de la maison",
+    "mots_cles": "clé clefs tas maison sms aide",
+    "contenu": "Pour l'ensemble de la maison vous pouvez trouver un tas de clés. Elles sont à votre disposition — merci de contacter l'aide par SMS."
+  },
+  {
+    "id": "wc-fosses",
+    "type": "astuce",
+    "question": "Je voudrais gérer les WC ?",
+    "titre": "WC & fosses septiques",
+    "mots_cles": "wc toilettes fosse septique sachet javel déodorant chimique produit compatible",
+    "contenu": "2 fosses septiques à entretenir : 1 sachet par mois dans les 2 WC (en bas et à l'étage). Ne pas utiliser d'eau de Javel ou de déodorants chimiques — utiliser un produit compatible."
+  },
+  {
+    "id": "papier-pq",
+    "type": "astuce",
+    "question": "Je voudrais gérer les WC ?",
+    "titre": "Papier toilette & sopalin",
+    "mots_cles": "papier pq toilette sopalin ménage placard salle de bain étage souris",
+    "contenu": "Papier PQ et ménage (sopalin) : dans le placard de la salle de bain à l'étage. Ne rien disposer au rez-de-chaussée à cause des souris !"
+  },
+  {
+    "id": "gaz-bouteilles",
+    "type": "astuce",
+    "question": "Je voudrais remplacer les bouteilles de gaz ?",
+    "titre": "Bouteilles de gaz",
+    "mots_cles": "gaz bouteille super u intermarché douarnenez",
+    "contenu": "Les grandes bouteilles et plus petites sont dispo à Super U aux heures ouvrables. Les petites sont aussi dispos au distributeur Intermarché à Douarnenez."
+  },
+  {
+    "id": "linge-table",
+    "type": "astuce",
+    "question": "Je cherche du linge pour la maison ?",
+    "titre": "Linge de table",
+    "mots_cles": "linge table nappe placard salle à manger chambre sud étage",
+    "contenu": "Dans le placard à côté de la table de la salle à manger — ou un gros stock dans la chambre sud à l'étage, dans les placards. Merci de respecter les tris et rangements."
+  },
+  {
+    "id": "linge-cuisine",
+    "type": "astuce",
+    "question": "Je cherche du linge pour la maison ?",
+    "titre": "Linge de cuisine",
+    "mots_cles": "linge cuisine torchon chambre sud étage placard",
+    "contenu": "Gros stock dans la chambre sud à l'étage, dans les placards. Merci de respecter les tris et rangements."
+  },
+  {
+    "id": "linge-draps",
+    "type": "astuce",
+    "question": "Je cherche du linge pour la maison ?",
+    "titre": "Draps, housses et taies",
+    "mots_cles": "drap housse taie lit chambre sud étage linge",
+    "contenu": "Parfois dans les lits, ou un gros stock dans la chambre sud à l'étage, dans les placards. Merci de respecter les tris et rangements."
+  },
+  {
+    "id": "plage",
+    "type": "astuce",
+    "question": "Je veux aller à la plage ?",
+    "titre": "Plage — jouets & draps de bain",
+    "mots_cles": "plage jouets coffre hall entrée draps de bain chambre sud",
+    "contenu": "Le coffre dans le hall d'entrée est rempli de jouets pour la plage. Des draps de bain sont dispo dans la chambre sud à l'étage, dans les placards."
+  },
+  {
+    "id": "menage-produits",
+    "type": "astuce",
+    "question": "Je veux faire le ménage ?",
+    "titre": "Produits d'entretien",
+    "mots_cles": "ménage produits entretien javel fosse septique cuisinière lavabo machine laver",
+    "contenu": "Il existe une multitude de produits. L'eau est traitée avec une fosse septique : éviter Javel et produits agressifs. Emplacements : sous la cuisinière, sous le lavabo de la salle de bain à l'étage, dans le placard à proximité de la machine à laver."
+  },
+  {
+    "id": "menage-aide",
+    "type": "contact",
+    "question": "Je veux faire le ménage ?",
+    "titre": "Aide ménage",
+    "mots_cles": "ménage aide personnes femme",
+    "contenu": "2 personnes sont dispos pour vous aider (voir aussi « femme de ménage »)."
+  },
+  {
+    "id": "poubelles",
+    "type": "astuce",
+    "question": "Que faire de mes déchets ?",
+    "titre": "Poubelles & tri",
+    "mots_cles": "poubelle déchet tri jaune compost verre noir locronan camping car",
+    "contenu": "3 tris :\n• JAUNES → entrée Locronan près des camping-cars : emballages papier/carton, plastiques, métal — en vrac sans sacs.\n• COMPOST → bac près du fil à linge / buis — pas de viandes ni crustacés.\n• VERRE → entrée Locronan près des camping-cars.\n• NOIRES → tout le reste, idéalement même endroit."
+  },
+  {
+    "id": "peinture-stock",
+    "type": "astuce",
+    "question": "Je veux faire des travaux de peinture ?",
+    "titre": "Produits bois & peintures",
+    "mots_cles": "peinture bois travaux placard machine laver bricolage grenier",
+    "contenu": "Dans le placard à proximité de la machine à laver — parfois dans le coin bricolage à l'entrée du grenier."
+  },
+  {
+    "id": "vaisselle",
+    "type": "astuce",
+    "question": "Je veux acheter de la vaisselle ?",
+    "titre": "Vaisselle",
+    "mots_cles": "vaisselle cuisine vaisselier salle à manger placard",
+    "contenu": "Grande quantité entre les placards de la cuisine, le vaisselier et les placards dans la vieille salle à manger. Pas besoin d'acheter en général."
+  },
+  {
+    "id": "wifi",
+    "type": "faq",
+    "question": "Comment me connecter au Wi‑Fi ?",
+    "titre": "Wi‑Fi",
+    "mots_cles": "wifi wi-fi internet connexion réseau",
+    "contenu": "Pas de Wi‑Fi dans cette maison."
+  },
+  {
+    "id": "femme-menage-ouragan",
+    "type": "contact",
+    "question": "Je cherche une femme de ménage ?",
+    "titre": "Femme de ménage — cousins Thiébaut",
+    "mots_cles": "femme ménage ménagère ouragan torchons microfibre thiébaut sms",
+    "contenu": "À joindre par SMS, ne travaille pas tous les jours — vous entendre sur les prix. Faut être présent ; n'aime que les torchons microfibre.",
+    "telephone": "+33 6 75 42 66 06"
+  },
+  {
+    "id": "christell-menage",
+    "type": "contact",
+    "question": "Je cherche une femme de ménage ?",
+    "titre": "Christell / Kristell",
+    "mots_cles": "christell kristell ménage weekend semaine linge",
+    "contenu": "Intervient les weekends et parfois en semaine, à voir.",
+    "telephone": "+33 6 62 37 49 12"
+  },
+  {
+    "id": "plombier-mobe",
+    "type": "contact",
+    "question": "Je cherche un plombier ?",
+    "titre": "Plombier — M. MOBE / Poudoulec",
+    "mots_cles": "plombier mobe poudoulec plonévez fuite eau",
+    "contenu": "Monsieur MOBE (entreprise Poudoulec à Plonévez).",
+    "telephone": "02 98 81 50 22 / 06 83 52 43 02",
+    "email": "Etude@poudoulec.fr"
+  },
+  {
+    "id": "electricien-mobe",
+    "type": "contact",
+    "question": "Je cherche un électricien ?",
+    "titre": "Électricien — M. MOBE / Poudoulec",
+    "mots_cles": "électricien electricien mobe poudoulec courant",
+    "contenu": "Monsieur MOBE (entreprise Poudoulec à Plonévez).",
+    "telephone": "02 98 81 50 22 / 06 83 52 43 02",
+    "email": "Etude@poudoulec.fr"
+  },
+  {
+    "id": "electricien-lebrin",
+    "type": "contact",
+    "question": "Je cherche un électricien ?",
+    "titre": "Électricien — Thomas LEBRIN",
+    "mots_cles": "électricien electricien thomas lebrin paul-louis jeune",
+    "contenu": "Jeune entreprise, de la part de Paul-Louis.",
+    "telephone": "06 69 43 55 59"
+  },
+  {
+    "id": "ebeniste",
+    "type": "contact",
+    "question": "Je cherche un ébéniste ?",
+    "titre": "Ébéniste",
+    "mots_cles": "ébéniste ebeniste chaise meuble fenêtre porte bois mairie locronan",
+    "contenu": "Conseil de l'ancien maire. Répare chaise, meuble, fabrique fenêtres/portes en bois. Travail au black, recommandé par la mairie de Locronan. Jamais travaillé avec lui.",
+    "telephone": "07 81 24 18 70"
+  },
+  {
+    "id": "menuisier",
+    "type": "contact",
+    "question": "Je cherche un menuisier / fenêtre neuve ?",
+    "titre": "Menuisier — charpente & fenêtres",
+    "mots_cles": "menuisier fenêtre charpente porte alu pvc bois plancher portail entrée",
+    "contenu": "Charpente, porte, fenêtre (alu/pvc/bois), plancher. Tient parole, peu communicatif, efficace, soigneux, bon conseil. A fait le portail extérieur de l'entrée.",
+    "telephone": "06 86 83 55 67"
+  },
+  {
+    "id": "foret-leblond",
+    "type": "contact",
+    "question": "Je veux un conseil sur les plantations de forêt ?",
+    "titre": "Expert forestier — Leblond",
+    "mots_cles": "forêt plantation expert leblond bois",
+    "contenu": "Expert forestier.",
+    "telephone": "06 86 54 38 16"
+  },
+  {
+    "id": "foret-lefloch",
+    "type": "contact",
+    "question": "Je veux un conseil sur les plantations de forêt ?",
+    "titre": "Jean-Baptiste Le Floch — bois",
+    "mots_cles": "forêt bois billes lefloch douarnenez volume vente coupe",
+    "contenu": "Estime le volume de bois, négocie la vente des billes, coupe et prépare les billes — ne gère pas les branches. Difficile à joindre, mais efficace. Très bons conseils (famille Le Floch à Douarnenez).",
+    "telephone": "06 63 85 39 32"
+  },
+  {
+    "id": "bucheron-martine",
+    "type": "contact",
+    "question": "Je veux employer un bûcheron pour couper du bois ?",
+    "titre": "Martine Le Floch — contrats coupe",
+    "mots_cles": "bûcheron bucheron bois coupe contrat assurance martine lefloch",
+    "contenu": "Remet des contrats pour permettre la coupe du bois par des particuliers — assurance obligatoire !",
+    "telephone": "06 60 73 65 71"
+  },
+  {
+    "id": "macon-perennou",
+    "type": "contact",
+    "question": "Je cherche un maçon ?",
+    "titre": "Maçon — Entreprise Perennou",
+    "mots_cles": "maçon macon perennou pierre mur terrassement chemin",
+    "contenu": "Gros œuvre, murs en pierre, percements portes/fenêtres, terrassements, chemins, places… Tient parole, envoie des messages avec photos, assez rapide.",
+    "telephone": "06 08 84 89 18"
+  },
+  {
+    "id": "macon-kereon",
+    "type": "contact",
+    "question": "Je cherche un maçon ?",
+    "titre": "Maçon — Entreprise Kereon",
+    "mots_cles": "maçon macon kereon béton",
+    "contenu": "Entreprise qui gère le béton de préférence.",
+    "telephone": "07 85 64 07 69"
+  },
+  {
+    "id": "macon-batimein",
+    "type": "contact",
+    "question": "Je cherche un maçon ?",
+    "titre": "Maçon pierre — Eric SALM / Batimein",
+    "mots_cles": "maçon macon batimein eric salm pierre",
+    "contenu": "Batimein EURL — Eric SALM travaille exclusivement la pierre.",
+    "telephone": "06 26 41 11 80"
+  },
+  {
+    "id": "toiture-martin",
+    "type": "contact",
+    "question": "Je veux nettoyer ou réparer ma toiture / gouttière ?",
+    "titre": "Couverture — MARTIN Roland / MBC",
+    "mots_cles": "toiture gouttière goutiere velux vmc couverture martin mbc manoir",
+    "contenu": "Toiture, gouttière, Velux, sortie VMC, nettoyer gouttières du manoir. Difficile à joindre mais tient parole, peu de délai.",
+    "telephone": "06 84 10 07 50",
+    "email": "mcb.couverture29@gmail.com"
+  },
+  {
+    "id": "elagage-koad",
+    "type": "contact",
+    "question": "Je veux élaguer des arbres ?",
+    "titre": "Élagage — Koad Forest",
+    "mots_cles": "élaguer elagage abattage arbres bois chauffage forêt koad",
+    "contenu": "Élagage, abattage, bois de chauffage, travaux et gestion de forêts.",
+    "telephone": "07 43 15 61 92"
+  },
+  {
+    "id": "plaquiste-fouquet",
+    "type": "contact",
+    "question": "Je cherche un plaquiste / carreleur / faïence ?",
+    "titre": "Plaquiste & carreleur — Rémy FOUQUET",
+    "mots_cles": "plaquiste placo isolation carreleur carrelage faïence faience chape fouquet",
+    "contenu": "Pose de placo, isolation + sols, chape liquide de finition, carrelage et faïence. Préfère qu'on lui fournisse portes / carrelage / faïence. Très pragmatique et rapide.",
+    "telephone": "06 63 56 86 28"
+  },
+  {
+    "id": "peintre-tretout",
+    "type": "contact",
+    "question": "Je cherche un peintre ?",
+    "titre": "Peintre — Philippe TRETOUT",
+    "mots_cles": "peintre tretout geneviève joncour quimper comptoir ours",
+    "contenu": "Le peintre de Geneviève Joncour — travail très soigné (au black). S'appuie sur la peinture vendue par le Comptoir de l'Ours à Quimper.",
+    "telephone": "06 71 05 93 06"
+  },
+  {
+    "id": "jardinier-quinnec",
+    "type": "contact",
+    "question": "Je cherche un jardinier ?",
+    "titre": "Jardinier — Manuel Quinnec",
+    "mots_cles": "jardinier quinnec tondeuse gazon pelouse année",
+    "contenu": "Tond l'ensemble du gazon à l'année.",
+    "telephone": "06 24 97 33 48"
+  }
+]
