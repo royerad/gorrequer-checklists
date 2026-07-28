@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aide — Gorrequer</title>
+  <style>
+    :root {
+      --bg: #f6f4f1; --card: #fff; --text: #1c1c1c; --muted: #666;
+      --line: #e4e0da; --ok: #2f5d50; --priority: #8a3b2c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 520px; margin: 0 auto; padding: 1rem;
+      background: var(--bg); color: var(--text);
+    }
+    h1 { margin: 0 0 0.35rem; font-size: 1.5rem; }
+    .subtitle { margin: 0 0 1rem; color: var(--muted); font-size: 0.95rem; }
+    .btn-home {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; margin: 0 0 1rem; padding: 0.75rem 0.9rem;
+      border-radius: 10px; border: 1px solid var(--ok); background: var(--ok);
+      color: #fff; font-size: 0.95rem; font-weight: 600; text-decoration: none;
+    }
+    .search-box {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 0.85rem; margin-bottom: 1rem;
+    }
+    .search-box label {
+      display: block; font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.35rem;
+    }
+    #q {
+      width: 100%; padding: 0.75rem 0.85rem; border: 1px solid var(--line);
+      border-radius: 10px; font: inherit; background: #fff;
+    }
+    .hints {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.65rem;
+    }
+    .hint-chip {
+      border: 1px solid var(--line); background: #fff; border-radius: 999px;
+      padding: 0.3rem 0.65rem; font-size: 0.82rem; cursor: pointer; color: var(--ok);
+    }
+    .status { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.9rem; }
+    .card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 12px; padding: 0.9rem 1rem; margin: 0.55rem 0;
+    }
+    .card .type {
+      display: inline-block; font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.03em;
+      padding: 0.15rem 0.45rem; border-radius: 999px; background: #eee; margin-bottom: 0.4rem;
+    }
+    .card .type.contact { background: #e5f0eb; color: var(--ok); }
+    .card .type.astuce { background: #fff3d6; color: #8a6a14; }
+    .card .type.faq { background: #f3e4e0; color: var(--priority); }
+    .card h2 { margin: 0 0 0.25rem; font-size: 1.05rem; }
+    .card .q { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--muted); }
+    .card .body { margin: 0; white-space: pre-wrap; line-height: 1.45; }
+    .card .meta { margin-top: 0.65rem; font-size: 0.95rem; }
+    .card a { color: var(--ok); font-weight: 600; text-decoration: none; }
+    .empty {
+      background: var(--card); border: 1px dashed var(--line); border-radius: 12px;
+      padding: 1rem; text-align: center; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <h1>Aide & foire aux questions</h1>
+  <p class="subtitle">Posez une question ou tapez des mots-clés</p>
+
+  <a class="btn-home" href="https://sites.google.com/view/gorrequerhomelife/accueil">← Retour à l'accueil</a>
+
+  <div class="search-box">
+    <label for="q">Votre question</label>
+    <input id="q" type="search" placeholder="Ex. plombier, poubelle, ampoule, Wi‑Fi…" autocomplete="off" />
+    <div class="hints" id="hints">
+      <button type="button" class="hint-chip" data-q="plombier">plombier</button>
+      <button type="button" class="hint-chip" data-q="poubelle">poubelle</button>
+      <button type="button" class="hint-chip" data-q="linge">linge</button>
+      <button type="button" class="hint-chip" data-q="gaz">gaz</button>
+      <button type="button" class="hint-chip" data-q="ménage">ménage</button>
+      <button type="button" class="hint-chip" data-q="wifi">wifi</button>
+      <button type="button" class="hint-chip" data-q="clé">clés</button>
+      <button type="button" class="hint-chip" data-q="électricien">électricien</button>
+    </div>
+  </div>
+
+  <p class="status" id="status">Chargement…</p>
+  <div id="results"></div>
+
+  <script>
+    const STOP = new Set(["le","la","les","un","une","des","de","du","au","aux","et","ou","en","je","me","mon","ma","mes","pour","avec","dans","sur","pas","qui","que","quoi","comment","cherche","veux","voudrais","faire","obtenir","gérer","aller","a","à","d","l","y"]);
+    let DATA = [];
+
+    function normalize(str) {
+      return String(str || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9+\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function tokens(str) {
+      return normalize(str).split(" ").filter((t) => t.length > 1 && !STOP.has(t));
+    }
+
+    function telHref(tel) {
+      if (!tel) return "";
+      const first = String(tel).split("/")[0].trim();
+      const cleaned = first.replace(/[^\d+]/g, "");
+      return cleaned ? "tel:" + cleaned : "";
+    }
+
+    function scoreItem(item, queryTokens) {
+      if (!queryTokens.length) return 0;
+      const blob = normalize([
+        item.question, item.titre, item.mots_cles, item.contenu,
+        item.telephone, item.email
+      ].join(" "));
+      let score = 0;
+      queryTokens.forEach((t) => {
+        if (blob.includes(t)) score += 3;
+        if (normalize(item.titre).includes(t)) score += 4;
+        if (normalize(item.mots_cles).includes(t)) score += 5;
+        if (normalize(item.question).includes(t)) score += 3;
+        // préfixe (plom → plombier)
+        if ((" " + blob + " ").split(" ").some((w) => w.startsWith(t) && t.length >= 3)) score += 2;
+      });
+      return score;
+    }
+
+    function typeLabel(type) {
+      if (type === "contact") return "Contact";
+      if (type === "astuce") return "Astuce";
+      return "FAQ";
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+    }
+
+    function render(items, query) {
+      const status = document.getElementById("status");
+      const box = document.getElementById("results");
+      if (!query.trim()) {
+        status.textContent = DATA.length + " fiches — tapez pour chercher";
+        box.innerHTML = '<div class="empty">Ex. « Je cherche un plombier » ou « poubelle jaune »</div>';
+        return;
+      }
+      status.textContent = items.length
+        ? items.length + " résultat" + (items.length > 1 ? "s" : "")
+        : "Aucun résultat";
+      if (!items.length) {
+        box.innerHTML = '<div class="empty">Aucun résultat. Essayez d’autres mots (plombier, linge, gaz…).</div>';
+        return;
+      }
+      box.innerHTML = items.map((item) => {
+        const tel = telHref(item.telephone);
+        const mail = item.email ? "mailto:" + item.email : "";
+        let meta = "";
+        if (item.telephone) {
+          meta += `<div class="meta">Tél. : ${tel
+            ? `<a href="${tel}">${escapeHtml(item.telephone)}</a>`
+            : escapeHtml(item.telephone)}</div>`;
+        }
+        if (item.email) {
+          meta += `<div class="meta">Email : <a href="${mail}">${escapeHtml(item.email)}</a></div>`;
+        }
+        return `<article class="card">
+          <span class="type ${escapeHtml(item.type)}">${typeLabel(item.type)}</span>
+          <h2>${escapeHtml(item.titre)}</h2>
+          <p class="q">${escapeHtml(item.question || "")}</p>
+          <p class="body">${escapeHtml(item.contenu || "")}</p>
+          ${meta}
+        </article>`;
+      }).join("");
+    }
+
+    function search() {
+      const q = document.getElementById("q").value;
+      const tks = tokens(q);
+      if (!tks.length) {
+        render([], q);
+        return;
+      }
+      const ranked = DATA
+        .map((item) => ({ item, score: scoreItem(item, tks) }))
+        .filter((x) => x.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 12)
+        .map((x) => x.item);
+      render(ranked, q);
+    }
+
+    document.getElementById("q").addEventListener("input", search);
+    document.getElementById("hints").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-q]");
+      if (!btn) return;
+      document.getElementById("q").value = btn.getAttribute("data-q");
+      search();
+      document.getElementById("q").focus();
+    });
+
+    fetch("aide-data.json")
+      .then((r) => r.json())
+      .then((data) => {
+        DATA = Array.isArray(data) ? data : [];
+        document.getElementById("status").textContent = DATA.length + " fiches prêtes";
+        render([], "");
+      })
+      .catch(() => {
+        document.getElementById("status").textContent = "Erreur";
+        document.getElementById("results").innerHTML =
+          '<div class="empty">Impossible de charger aide-data.json</div>';
+      });
+  </script>
+</body>
+</html>
